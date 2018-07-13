@@ -4,12 +4,14 @@ import { withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import _ from 'lodash';
 
 import { grey, blue } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import FormControl from '@material-ui/core/FormControl';
@@ -29,6 +31,14 @@ const theme = createMuiTheme({
 const styles = theme => ({
   root: {
     backgroundColor: grey['100']
+  },
+
+  textFieldPopper: {
+    marginBottom: -50
+  },
+
+  textFieldTooltip: {
+    backgroundColor: '#43d3af'
   }
 });
 
@@ -37,22 +47,32 @@ const styles = theme => ({
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.setState({ superName: '', superPassword: '' });
+    this.state = { superName: '', superPassword: '' };
   }
 
   state = {
-    superName:     null,
-    superPassword: null,
+    superName:                    null,
+    superPassword:                null,
+    showTooltipSupernameRequired: true,
+    showTooltipPasswordRequired:  true,
   };
 
   updateTextfield = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
+    this.setState({ [event.target.name]: event.target.value });
   };
 
   handleSuperPlatform = () => {
     console.log(this.state);
-    if (!!this.state.superName && !!this.state.superPassword) {
+    if (!_.isEmpty(this.state.superName) && !_.isEmpty(this.state.superPassword)) {
       this.props.history.push('/listing');
+    } else {
+      if (_.isEmpty(this.state.superName)) {
+        this.setState({ showTooltipSupernameRequired: true });
+      }
+
+      if (_.isEmpty(this.state.password)) {
+        this.setState({ showTooltipPasswordRequired: true });
+      }
     }
   };
 
@@ -93,17 +113,39 @@ export default class Login extends React.Component {
                 <InputLabel htmlFor="super-name">
                   Supername
                 </InputLabel>
-                <Input fullWidth id='super-name' name='superName'
-                       type='text'
-                       onChange={this.updateTextfield} />
+                <Tooltip classes={{
+                  popper:  classes.textFieldPopper,
+                  tooltip: classes.textFieldTooltip
+                }}
+                         title="Supername is required"
+                         placement="top-end"
+                         disableFocusListener={true}
+                         disableHoverListener={true}
+                         disableTouchListener={true}
+                         open={true}>
+                  <Input fullWidth id='super-name' name='superName'
+                         type='text'
+                         onChange={this.updateTextfield} />
+                </Tooltip>
               </FormControl>
               <FormControl fullWidth>
                 <InputLabel htmlFor="super-password">
                   Password
                 </InputLabel>
-                <Input fullWidth id='super-password' name='superPassword'
-                       type='password'
-                       onChange={this.updateTextfield} />
+                <Tooltip classes={{
+                  popper:  classes.textFieldPopper,
+                  tooltip: classes.textFieldTooltip
+                }}
+                         title="Password is required"
+                         placement="top-end"
+                         disableFocusListener={true}
+                         disableHoverListener={true}
+                         disableTouchListener={true}
+                         open={true}>
+                  <Input fullWidth id='super-password' name='superPassword'
+                         type='password'
+                         onChange={this.updateTextfield} />
+                </Tooltip>
               </FormControl>
             </Grid>
           </Grid>

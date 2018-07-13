@@ -30,12 +30,9 @@ class Supernation extends React.Component {
     // });
   }
 
-  state = () => {
-    console.log('getting states');
-    return {
-      signedIn:       false,
-      lastSignedInAt: null,
-    }
+  state = {
+    signedIn:       false,
+    lastSignedInAt: null,
   };
 
   componentWillMount() {
