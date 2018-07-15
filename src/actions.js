@@ -1,1 +1,3 @@
 export const ADD_FAVORITES = 'ADD_FAVORITES';
+
+export const FETCH_ADVERTISERS = 'FETCH_ADVERTISERS';

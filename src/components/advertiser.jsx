@@ -34,7 +34,6 @@ const styles = theme => ({
   superIconOverlay: {
     position: 'absolute',
     color:    'rgba(255, 255, 255, 0.3)',
-    zIndex:   1,
     width:    40,
     height:   40,
   },
@@ -45,7 +44,6 @@ const styles = theme => ({
 
   fabProgress: {
     position: 'absolute',
-    zIndex:   1
   },
 
   // Dense version
@@ -59,7 +57,6 @@ const styles = theme => ({
     position: 'absolute',
     color:    'rgba(255, 255, 255, 0.3)',
     opacity:  0.2,
-    zIndex:   1,
     width:    24,
     height:   24,
   },
@@ -167,7 +164,9 @@ class Advertiser extends React.Component {
             <Avatar className={
               dense ?
                 classes.avatarDense :
-                classes.avatar}>CH</Avatar>
+                classes.avatar}
+                    alt={advertiser.fullName}
+                    src={advertiser.avatarUrl} />
             <Grow in={showPopoverIcon}>
               <SupervisorAccount className={
                 dense ?

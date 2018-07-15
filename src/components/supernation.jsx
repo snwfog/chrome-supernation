@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 
 import {
   HashRouter as Router,
@@ -14,6 +15,8 @@ import {
   MuiThemeProvider,
   createMuiTheme
 } from '@material-ui/core/styles';
+
+import store from '../store';
 
 import Login from './login';
 import Favorites from './favorites';
@@ -65,21 +68,23 @@ export default class Supernation extends React.Component {
 
     return (
       <Router>
-        <MuiThemeProvider theme={theme}>
-          <Grid container className={classes.root}>
-            <Switch>
-              <Route exact path="/"
-                // component={<Login signedIn={this.state.signedIn} />}
-                     render={() => {
-                       return this.state.signedIn ?
-                         <Redirect to='/favorites' /> :
-                         <Login />
-                     }} />
-              <Route exact path="/favorites" component={Favorites} />
-              <Route exact path="/advertisers" component={Advertisers} />
-            </Switch>
-          </Grid>
-        </MuiThemeProvider>
+        <Provider store={store}>
+          <MuiThemeProvider theme={theme}>
+            <Grid container className={classes.root}>
+              <Switch>
+                <Route exact path="/"
+                  // component={<Login signedIn={this.state.signedIn} />}
+                       render={() => {
+                         return this.state.signedIn ?
+                           <Redirect to='/favorites' /> :
+                           <Login />
+                       }} />
+                <Route exact path="/favorites" component={Favorites} />
+                <Route exact path="/advertisers" component={Advertisers} />
+              </Switch>
+            </Grid>
+          </MuiThemeProvider>
+        </Provider>
       </Router>
     )
   }

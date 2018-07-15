@@ -1,10 +1,11 @@
 import React from 'react';
 
-import faker from 'faker';
+import { connect } from 'react-redux';
 
 import { withRouter } from 'react-router-dom';
 
 import moment from 'moment';
+import faker from 'faker';
 
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
@@ -28,32 +29,28 @@ const styles = theme => ({
   }
 });
 
+const mapStateToProps = state => {
+  return { favorites: state.favorites };
+};
+
+@connect(mapStateToProps)
 @withRouter
 @withStyles(styles)
 export default class Favorites extends React.Component {
   constructor(props) {
     super(props);
     console.log('favorites constructed');
-    this.state = {
-      favorites:
-        _.times(4, () => {
-          return {
-            id:            faker.random.uuid(),
-            email:         faker.internet.email(),
-            lastSuperTime: faker.date.recent(),
-          }
-        })
-    }
   }
 
   handleScroll = (event) => {
+    // console.log(event.clientY, event.deltaY, event.pageY);
     if (event.deltaY > 0) {
       this.props.history.push('/advertisers');
     }
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, favorites } = this.props;
 
     return (
       <Grid container className={classes.root} onWheel={this.handleScroll}>
@@ -65,10 +62,11 @@ export default class Favorites extends React.Component {
 
         <List className={classes.list}>
           <Grid item>
-            {_.map(this.state.favorites, (favorite) => {
-              return (<Advertiser key={favorite.id}
-                                  advertiser={favorite}
-                                  favorite={true} />)
+            {_.map(favorites, (favorite) => {
+              return (
+                <Advertiser key={favorite.id} advertiser={favorite}
+                            favorite={true} />
+              )
             })}
           </Grid>
         </List>

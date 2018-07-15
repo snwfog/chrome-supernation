@@ -1,9 +1,10 @@
 import React from 'react';
 
+import { withRouter } from 'react-router-dom';
+
 import { connect } from 'react-redux';
 
 import _ from 'lodash';
-import faker from 'faker';
 
 import PropTypes from 'prop-types';
 
@@ -20,7 +21,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { ArrowBack } from '@material-ui/icons';
 
-import store from '../store';
+import { FETCH_ADVERTISERS } from '../actions';
 
 import SearchBar from './searchbar';
 import Navbar from './navbar';
@@ -52,23 +53,19 @@ const mapStateToProps = state => {
   return { advertisers: state.advertisers };
 };
 
-@connect(mapStateToProps)
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchAdvertisers: () => dispatch(({ type: FETCH_ADVERTISERS }))
+  }
+};
+
+@connect(mapStateToProps, mapDispatchToProps)
+@withRouter
 @withStyles(styles)
 export default class Advertisers extends React.Component {
   constructor(props) {
     super(props);
-
     console.log('advertisers constructed');
-    this.state = {
-      advertisers:
-        _.times(20, () => {
-          return {
-            id:            faker.random.uuid(),
-            email:         faker.internet.email(),
-            lastSuperTime: faker.date.recent(),
-          }
-        })
-    };
   }
 
   static propTypes = {
@@ -83,27 +80,21 @@ export default class Advertisers extends React.Component {
     this.props.history.push('/favorites');
   };
 
+  handleScrollUp = (event) => {
+    // if (event.deltaY < 0 && event.clientY === event.pageY) {
+    //   this.props.history.push('/favorites');
+    // }
+  };
+
   handleScroll = ({ realHeight, containerHeight, topPosition }) => {
-    console.log(realHeight, containerHeight, topPosition);
-    let counts          = this.state.advertisers.length;
+    // console.log(realHeight, containerHeight, topPosition);
+    let counts          = this.props.advertisers.length;
     let itemHeight      = (realHeight - containerHeight) / counts;
     // Trigger reload at approx few items left to display
-    let triggerPosition = realHeight - containerHeight - itemHeight * 2;
+    let triggerPosition = realHeight - containerHeight - itemHeight * 0.2;
     if (topPosition > triggerPosition) {
       console.log('loading more data...');
-
-      this.setState({
-        advertisers: [
-          ...this.state.advertisers,
-          ...(_.times(20, () => {
-            return {
-              id:            faker.random.uuid(),
-              email:         faker.internet.email(),
-              lastSuperTime: faker.date.recent(),
-            }
-          }))
-        ]
-      })
+      this.props.fetchAdvertisers();
     }
   };
 
@@ -113,13 +104,15 @@ export default class Advertisers extends React.Component {
   }
 
   render() {
-    const { classes, dense } = this.props;
+    const { classes, dense, advertisers } = this.props;
 
     return (
-      <Grid container className={classes.root}>
+      <Grid container
+            className={classes.root}
+            onWheel={this.handleScrollUp}>
         <Navbar navbarTitle={<SearchBar />} />
         <ScrollArea className={classes.scrollArea}
-                    speed={0.1}
+                    speed={0.2}
                     onScroll={this.handleScroll}
                     smoothScrolling={true}
                     horizontal={false}>
@@ -129,7 +122,7 @@ export default class Advertisers extends React.Component {
                            classNames={{ appear: 'animated fadeIn' }}>
               <List className={classes.root} dense={dense}>
                 <Grid item>
-                  {_.map(this.state.advertisers, (advertiser) => {
+                  {_.map(advertisers, (advertiser) => {
                     return (
                       <Advertiser key={advertiser.id}
                                   dense={dense}
