@@ -36,6 +36,15 @@ const styles = theme => ({
     height:   60,
   },
 
+  heading: {
+    fontSize: 18
+  },
+
+  subheading: {
+    fontSize: 15,
+    color:    '#666'
+  },
+
   superIconOverlay: {
     position: 'absolute',
     color:    '#eee',
@@ -211,19 +220,20 @@ export default class Advertiser extends React.PureComponent {
           <Grid container direction="column">
             {dense ?
               <div>
-                <Typography variant="title">
+                <Typography variant="title" className={classes.heading}>
                   {advertiser.get('email')}
                 </Typography>
               </div> :
 
               <div>
-                <Typography variant="title">
+                <Typography gutterBottom className={classes.heading}
+                            variant="title">
                   {advertiser.get('fullName')}
                 </Typography>
-                <Typography variant="subheading">
+                <Typography variant="subheading" className={classes.subheading}>
                   {advertiser.get('email')}
                 </Typography>
-                <Typography variant="subheading">
+                <Typography variant="subheading" className={classes.subheading}>
                   {`Last super: ${advertiser.get('lastSuperTime') ?
                     moment(advertiser.get('lastSuperTime')).fromNow() :
                     'Never'}`}

@@ -37,7 +37,7 @@ const theme = createMuiTheme({
 const styles = theme => ({
   root: {
     width:     500,
-    // maxHeight: 500,
+    // minHeight: 300,
   },
 
   animatedSwitch: {

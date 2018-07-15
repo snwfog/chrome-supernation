@@ -43,7 +43,8 @@ const styles = theme => ({
   list: {
     // overflow:  'auto',
     // maxHeight: 400,
-    width: '100%'
+    minHeight: 200,
+    width:     '100%'
   }
 });
 
