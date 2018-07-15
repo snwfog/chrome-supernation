@@ -15,6 +15,10 @@ import { grey } from '@material-ui/core/colors';
 
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
 import Navbar from './navbar'
@@ -23,6 +27,10 @@ import Advertiser from './advertiser';
 const styles = theme => ({
   root: {
     backgroundColor: grey["100"],
+  },
+
+  card: {
+    margin: 10,
   },
 
   list: {
@@ -78,7 +86,26 @@ export default class Favorites extends React.Component {
 
         {
           _.isEmpty(favorites) ?
-            <Typography>Please add some favorites</Typography> :
+            <Card className={classes.card}>
+              <CardContent>
+                <Typography gutterBottom variant="headline">
+                  Tips:
+                </Typography>
+                <Typography component="p">
+                  You do not have any favorites saved at the moment,
+                  scroll down on your mouse wheel or on your track pad
+                  will let you search advertisers that are visible to you.
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button color="primary" onClick={() => {
+                  this.props.history.push('/advertisers')
+                }}>
+                  Show Advertisers
+                </Button>
+              </CardActions>
+            </Card>
+            :
             <List className={classes.list}>
               <Grid item>
                 {_.map(favorites, (favorite) => {

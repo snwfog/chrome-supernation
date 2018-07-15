@@ -18,7 +18,7 @@ let advertisers = () => (_.times(20, () => {
   }
 }));
 
-let favorites = () => (_.times(4, () => {
+let favorites = () => (_.times(0, () => {
   return {
     id:            faker.random.uuid(),
     email:         faker.internet.email(),
