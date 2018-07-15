@@ -74,18 +74,19 @@ const styles = theme => ({
 });
 
 const mapDispatchToProps = dispatch => {
-  return {
-    addFavorites: () => dispatch(({ type: FAVORITES_ADD }))
-  }
+  return {}
 };
 
+// style={{ color: 'linear-gradient(270deg,#3bf5c6,#3381ec)' }} />
 @connect(null, mapDispatchToProps)
 @withStyles(styles)
-class Advertiser extends React.Component {
+export default class Advertiser extends React.PureComponent {
   constructor(props) {
     super(props);
     this._elapseUpdateInterval = 10; // ms
     this._elapseTickLimit      = props.elapseTimeLimit / this._elapseUpdateInterval;
+
+    console.log(props);
 
     this.state = { dialogFavoritesRemove: false };
   }
@@ -94,14 +95,16 @@ class Advertiser extends React.Component {
     elapseTimeLimit: PropTypes.number,
     advertiser:      PropTypes.object,
     dense:           PropTypes.bool,
-    favorite:        PropTypes.bool,
+    isFavorite:      PropTypes.bool,
+    secondaryAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     elapseTimeLimit: 800,
     advertiser:      null,
     dense:           false,
-    favorite:        false,
+    isFavorite:      false,
+    secondaryAction: null,
   };
 
   state = {
@@ -115,10 +118,13 @@ class Advertiser extends React.Component {
     this.setState({ showPopoverIcon: !this.state.showPopoverIcon })
   };
 
-  handleAdvertiserSecondaryAction = () => {
-    if (this.props.favorite) {
-      this.setState({ dialogFavoritesRemove: !this.state.dialogFavoritesRemove });
-    }
+  handleSecondaryAction = () => {
+    // this.props.secondaryAction();
+    // console.log('updating advertiser');
+    // this.forceUpdate();
+
+    // this.setState({ dialogFavoritesRemove: !this.state.dialogFavoritesRemove });
+
     // chrome.storage.sync.set({ email: 'charles@stackadapt.com' }, () => {
     //   console.log('sync\'ed');
     // });
@@ -160,7 +166,7 @@ class Advertiser extends React.Component {
   render() {
     const {
             dense,
-            favorite,
+            isFavorite,
             advertiser,
             classes,
           } = this.props;
@@ -189,8 +195,8 @@ class Advertiser extends React.Component {
               dense ?
                 classes.avatarDense :
                 classes.avatar}
-                    alt={advertiser.fullName}
-                    src={advertiser.avatarUrl} />
+                    alt={advertiser.get('fullName')}
+                    src={advertiser.get('avatarUrl')} />
             <Grow in={showPopoverIcon}>
               <SupervisorAccount className={
                 dense ?
@@ -213,36 +219,36 @@ class Advertiser extends React.Component {
             {dense ?
               <div>
                 <Typography variant="title">
-                  {advertiser.email}
+                  {advertiser.get('email')}
                 </Typography>
               </div> :
 
               <div>
                 <Typography variant="title">
-                  {advertiser.fullName}
+                  {advertiser.get('fullName')}
                 </Typography>
                 <Typography variant="subheading">
-                  {advertiser.email}
+                  {advertiser.get('email')}
                 </Typography>
                 <Typography variant="subheading">
-                  {`Last super: ${advertiser.lastSuperTime ?
-                    moment(advertiser.lastSuperTime).fromNow() :
+                  {`Last super: ${advertiser.get('lastSuperTime') ?
+                    moment(advertiser.get('lastSuperTime')).fromNow() :
                     'Never'}`}
                 </Typography>
               </div>
             }
           </Grid>
-          <ListItemSecondaryAction
-            onClick={this.handleAdvertiserSecondaryAction}>
+          <ListItemSecondaryAction onClick={this.props.secondaryAction}>
             <IconButton>
-              {favorite ?
+              {isFavorite ?
                 <Star style={{ color: '#43d3af' }} /> :
                 <StarBorder style={{ color: '#43d3af' }} />}
             </IconButton>
           </ListItemSecondaryAction>
           <Dialog open={this.state.dialogFavoritesRemove}>
-            <DialogTitle>Remove {advertiser.fullName} from
-                         favorites?</DialogTitle>
+            <DialogTitle>
+              Remove {advertiser.get('fullName')} from favorites?
+            </DialogTitle>
             {/*<DialogContent>*/}
             {/*<DialogContentText>Remove {advertiser.fullName} from*/}
             {/*favorites?</DialogContentText>*/}
@@ -260,5 +266,3 @@ class Advertiser extends React.Component {
   }
 }
 
-// style={{ color: 'linear-gradient(270deg,#3bf5c6,#3381ec)' }} />
-export default Advertiser;

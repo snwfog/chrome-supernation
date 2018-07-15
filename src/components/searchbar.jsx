@@ -18,31 +18,45 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps    = ({ advertiserSearchName }) => ({ advertiserSearchName });
+const mapStateToProps    = (state) => ({ advertiserSearchName: state.get('advertiserSearchName') });
 const mapDispatchToProps = dispatch => {
   return {
-    handleAdvertiserSearch: (event) => dispatch({
-      type:                 ADVERTISERS_SEARCH,
-      advertiserSearchName: event.target.value
+    handleAdvertiserSearch: (advertiserSearchName) => dispatch({
+      advertiserSearchName,
+      type: ADVERTISERS_SEARCH,
     })
   }
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styles)
-export default class SearchBar extends React.Component {
+export default class SearchBar extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = { advertiserSearchName: '' };
+  }
+
+  handleAdvertiserSearch = (event) => {
+    console.log('searching for', event.target.value);
+    let advertiserSearchName = event.target.value;
+    this.setState({ advertiserSearchName },
+      () => {
+        this.props.handleAdvertiserSearch(advertiserSearchName)
+      });
+  };
+
   // componentDidMount() {}
 
   render() {
-    const { classes, advertiserSearchName, } = this.props;
+    const { classes } = this.props;
     return (
       <FormControl fullWidth>
         <Input autoFocus
                id="search"
                type="text"
                placeholder="stackbot@stackadapt.com"
-               value={advertiserSearchName}
-               onChange={this.props.handleAdvertiserSearch}
+               value={this.state.advertiserSearchName}
+               onChange={this.handleAdvertiserSearch}
                startAdornment={
                  <InputAdornment className={classes.adornment} position="start">
                    <Magnifier />

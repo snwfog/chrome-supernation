@@ -49,7 +49,7 @@ const styles = theme => ({
 });
 
 @withStyles(styles)
-export default class Supernation extends React.Component {
+export default class Supernation extends React.PureComponent {
   constructor(props) {
     super(props);
 

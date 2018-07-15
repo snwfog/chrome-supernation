@@ -45,9 +45,9 @@ const styles = theme => ({
 
 @withRouter
 @withStyles(styles)
-export default class Navbar extends React.Component {
+export default class Navbar extends React.PureComponent {
   // static propTypes = {
-  //   titleComponent: PropTypes.instanceOf(React.Component).isRequired,
+  //   titleComponent: PropTypes.instanceOf(React.PureComponent).isRequired,
   // };
 
   static defaultProps = {

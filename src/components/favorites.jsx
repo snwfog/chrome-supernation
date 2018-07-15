@@ -21,6 +21,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
+import { FAVORITES_REMOVE } from '../actions';
+
 import Navbar from './navbar'
 import Advertiser from './advertiser';
 
@@ -41,13 +43,25 @@ const styles = theme => ({
 });
 
 const mapStateToProps = state => {
-  return { favorites: state.favorites };
+  console.log(state);
+  return { favorites: state.get('favorites') };
 };
 
-@connect(mapStateToProps)
+const mapDispatchToProps = dispatch => {
+  return {
+    favoritesRemove: (index, favorite) => dispatch(({
+      type:    FAVORITES_REMOVE,
+      payload: {
+        favorite
+      }
+    }))
+  }
+};
+
+@connect(mapStateToProps, mapDispatchToProps)
 @withRouter
 @withStyles(styles)
-export default class Favorites extends React.Component {
+export default class Favorites extends React.PureComponent {
   constructor(props) {
     super(props);
     // if (_.isEmpty(props.favorites)) {
@@ -104,14 +118,14 @@ export default class Favorites extends React.Component {
                   Show Advertisers
                 </Button>
               </CardActions>
-            </Card>
-            :
-            <List className={classes.list}>
+            </Card> : <List className={classes.list}>
               <Grid item>
-                {_.map(favorites, (favorite) => {
+                {favorites.map((favorite) => {
                   return (
-                    <Advertiser key={favorite.id} advertiser={favorite}
-                                favorite={true} />
+                    <Advertiser key={favorite.get('id')}
+                                advertiser={favorite}
+                                isFavorite={Boolean(favorite.get('isFavorite'))}
+                                secondaryAction={() => this.props.favoritesRemove(favorite)} />
                   )
                 })}
               </Grid>

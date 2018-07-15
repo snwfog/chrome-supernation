@@ -22,7 +22,7 @@ import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import { ArrowBack } from '@material-ui/icons';
 
-import { ADVERTISERS_FETCH } from '../actions';
+import { ADVERTISERS_FETCH, FAVORITES_ADD } from '../actions';
 
 import SearchBar from './searchbar';
 import Navbar from './navbar';
@@ -51,19 +51,31 @@ const styles = theme => ({
 
 
 const mapStateToProps = state => {
-  return { advertisers: state.advertisers };
+  return {
+    advertisers: state.get('advertisers'),
+  };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchAdvertisers: () => dispatch(({ type: ADVERTISERS_FETCH }))
+    advertisersFetch: () => dispatch(({
+      type: ADVERTISERS_FETCH
+    })),
+
+    favoritesAdd: (advertiser, index) => dispatch(({
+      type:    FAVORITES_ADD,
+      payload: {
+        advertiser,
+        index,
+      }
+    }))
   }
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
 @withRouter
 @withStyles(styles)
-export default class Advertisers extends React.Component {
+export default class Advertisers extends React.PureComponent {
   constructor(props) {
     super(props);
     console.log('advertisers constructed');
@@ -89,13 +101,13 @@ export default class Advertisers extends React.Component {
 
   handleScroll = ({ realHeight, containerHeight, topPosition }) => {
     // console.log(realHeight, containerHeight, topPosition);
-    let counts          = this.props.advertisers.length;
+    let counts          = this.props.advertisers.size;
     let itemHeight      = (realHeight - containerHeight) / counts;
     // Trigger reload at approx few items left to display
     let triggerPosition = realHeight - containerHeight - itemHeight * 0.2;
     if (topPosition > triggerPosition) {
       console.log('loading more data...');
-      this.props.fetchAdvertisers();
+      this.props.advertisersFetch();
     }
   };
 
@@ -103,10 +115,11 @@ export default class Advertisers extends React.Component {
 
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    console.log('should update?');
-    return true;
-  }
+  // Using pure component implement this already using shallow comparison
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   console.log('should update?');
+  //   return true;
+  // }
 
   render() {
     const { classes, dense, advertisers } = this.props;
@@ -124,12 +137,14 @@ export default class Advertisers extends React.Component {
           <Fade in={true} timeout={760}>
             <List className={classes.root} dense={dense}>
               <Grid item>
-                {_.map(advertisers, (advertiser) => {
+                {advertisers.map((advertiser, index) => {
                   return (
-                    <Advertiser key={advertiser.id}
+                    <Advertiser key={advertiser.get('id')}
                                 dense={dense}
                                 advertiser={advertiser}
-                                favorite={false} />
+                                isFavorite={Boolean(advertiser.get('isFavorite'))}
+                                secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
+                    />
                   )
                 })}
               </Grid>

@@ -44,7 +44,7 @@ const styles = theme => ({
 
 @withRouter
 @withStyles(styles)
-export default class Login extends React.Component {
+export default class Login extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = { superName: '', superPassword: '' };
