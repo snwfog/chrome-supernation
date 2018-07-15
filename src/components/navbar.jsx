@@ -36,6 +36,10 @@ const styles = theme => ({
     borderColor:  '#43d3af',
     boxShadow:    '0 3px 5px 2px rgba(67, 211, 175, .3)',
     borderRadius: '3px 3px 0 0'
+  },
+
+  menu: {
+    zIndex: 99999,
   }
 });
 
@@ -47,7 +51,7 @@ export default class Navbar extends React.Component {
   // };
 
   static defaultProps = {
-    navbarTitle: <Typography variant="title" style={{flexGrow: 1}}>
+    navbarTitle: <Typography variant="title" style={{ flexGrow: 1 }}>
                    Untitled
                  </Typography>
   };
@@ -81,7 +85,8 @@ export default class Navbar extends React.Component {
               <MoreVert />
             </IconButton>
           </MuiThemeProvider>
-          <Menu anchorEl={this.state.menuAnchorEl}
+          <Menu className={classes.menu}
+                anchorEl={this.state.menuAnchorEl}
                 open={Boolean(this.state.menuAnchorEl)}
                 onClose={this.closeMenu}>
             <MenuItem onClick={this.logout}>

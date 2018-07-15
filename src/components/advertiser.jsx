@@ -7,10 +7,12 @@ import classNames from 'classnames';
 
 import moment from 'moment';
 
-import ListItem from '@material-ui/core/ListItem';
 import Paper from '@material-ui/core/Paper';
+import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -25,6 +27,10 @@ const styles = theme => ({
     paddingRight: 15,
   },
 
+  avatarButton: {
+    marginRight: 15,
+  },
+
   avatar: {
     position: 'absolute',
     width:    60,
@@ -33,7 +39,8 @@ const styles = theme => ({
 
   superIconOverlay: {
     position: 'absolute',
-    color:    'rgba(255, 255, 255, 0.3)',
+    color:    '#eee',
+    opacity:  0.3,
     width:    40,
     height:   40,
   },
@@ -55,8 +62,8 @@ const styles = theme => ({
 
   superIconOverlayDense: {
     position: 'absolute',
-    color:    'rgba(255, 255, 255, 0.3)',
-    opacity:  0.2,
+    color:    '#eee',
+    opacity:  0.3,
     width:    24,
     height:   24,
   },
@@ -152,7 +159,8 @@ class Advertiser extends React.Component {
     return (
       <Paper className={classes.paper}>
         <ListItem className={classes.advertiser}>
-          <Button mini={dense}
+          <Button className={classes.avatarButton}
+                  mini={dense}
                   variant="fab"
                   onMouseEnter={this.togglePopoverIcon}
                   onMouseLeave={() => {
@@ -185,10 +193,29 @@ class Advertiser extends React.Component {
                               thickness={2}
                               className={classes.fabProgress} />}
           </Button>
-          <ListItemText primary={advertiser.email}
-                        secondary={`Last super: ${advertiser.lastSuperTime ?
-                          moment(advertiser.lastSuperTime).fromNow() :
-                          'Never'}`} />
+          <Grid container direction="column">
+            {dense ?
+              <div>
+                <Typography variant="title">
+                  {advertiser.email}
+                </Typography>
+              </div> :
+
+              <div>
+                <Typography variant="title">
+                  {advertiser.fullName}
+                </Typography>
+                <Typography variant="subheading">
+                  {advertiser.email}
+                </Typography>
+                <Typography variant="subheading">
+                  {`Last super: ${advertiser.lastSuperTime ?
+                    moment(advertiser.lastSuperTime).fromNow() :
+                    'Never'}`}
+                </Typography>
+              </div>
+            }
+          </Grid>
           <ListItemSecondaryAction
             onClick={this.handleAdvertiserSecondaryAction}>
             <IconButton>
