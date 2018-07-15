@@ -13,6 +13,11 @@ import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -49,7 +54,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    favoritesRemove: (index, favorite) => dispatch(({
+    favoritesRemove: (favorite) => dispatch(({
       type:    FAVORITES_REMOVE,
       payload: {
         favorite
@@ -67,6 +72,7 @@ export default class Favorites extends React.PureComponent {
     // if (_.isEmpty(props.favorites)) {
     //   this.props.history.push('/advertisers');
     // }
+    this.state = { showDialogFavoritesRemove: false };
     console.log('favorites constructed');
   }
 
@@ -99,7 +105,7 @@ export default class Favorites extends React.PureComponent {
         } />
 
         {
-          _.isEmpty(favorites) ?
+          favorites.isEmpty() ?
             <Card className={classes.card}>
               <CardContent>
                 <Typography gutterBottom variant="headline">
@@ -122,10 +128,27 @@ export default class Favorites extends React.PureComponent {
               <Grid item>
                 {favorites.map((favorite) => {
                   return (
-                    <Advertiser key={favorite.get('id')}
-                                advertiser={favorite}
-                                isFavorite={Boolean(favorite.get('isFavorite'))}
-                                secondaryAction={() => this.props.favoritesRemove(favorite)} />
+                    <div key={favorite.get('id')}>
+                      <Advertiser advertiser={favorite}
+                                  isFavorite={Boolean(favorite.get('isFavorite'))}
+                                  secondaryAction={() => this.setState({ favoriteToRemove: favorite })} />
+
+                      <Dialog open={this.state.favoriteToRemove === favorite}>
+                        <DialogTitle>
+                          Remove {favorite.get('fullName')} from favorites?
+                        </DialogTitle>
+                        <DialogActions>
+                          <Button color="primary"
+                                  onClick={() => this.setState({ favoriteToRemove: null })}>
+                            Cancel
+                          </Button>
+                          <Button autoFocus color="primary"
+                                  onClick={() => this.props.favoritesRemove(favorite)}>
+                            Confirm
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </div>
                   )
                 })}
               </Grid>

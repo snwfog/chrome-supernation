@@ -9,11 +9,6 @@ import moment from 'moment';
 import Paper from '@material-ui/core/Paper';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogActions from '@material-ui/core/DialogActions';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar';
@@ -87,8 +82,6 @@ export default class Advertiser extends React.PureComponent {
     this._elapseTickLimit      = props.elapseTimeLimit / this._elapseUpdateInterval;
 
     console.log(props);
-
-    this.state = { dialogFavoritesRemove: false };
   }
 
   static propTypes = {
@@ -245,21 +238,6 @@ export default class Advertiser extends React.PureComponent {
                 <StarBorder style={{ color: '#43d3af' }} />}
             </IconButton>
           </ListItemSecondaryAction>
-          <Dialog open={this.state.dialogFavoritesRemove}>
-            <DialogTitle>
-              Remove {advertiser.get('fullName')} from favorites?
-            </DialogTitle>
-            {/*<DialogContent>*/}
-            {/*<DialogContentText>Remove {advertiser.fullName} from*/}
-            {/*favorites?</DialogContentText>*/}
-            {/*</DialogContent>*/}
-            <DialogActions>
-              <Button color="primary" onClick={() => {
-                this.setState({ dialogFavoritesRemove: false })
-              }}>Back</Button>
-              <Button autoFocus color="primary">Confirm</Button>
-            </DialogActions>
-          </Dialog>
         </ListItem>
       </Paper>
     )

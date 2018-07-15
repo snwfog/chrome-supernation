@@ -8,7 +8,7 @@ import { Map, List, OrderedSet } from 'immutable';
 import {
   ADVERTISERS_FETCH,
   ADVERTISERS_SEARCH,
-  FAVORITES_ADD
+  FAVORITES_ADD, FAVORITES_REMOVE
 } from "./actions";
 
 let advertisers = () => (_.times(20, () => {
@@ -62,6 +62,9 @@ const rootReducer = (state = initialState, action) => {
       state        = state.updateIn(['advertisers', action.payload.index],
         advertiser => advertiser.set('isFavorite', true));
       return state;
+    case FAVORITES_REMOVE:
+      return state.updateIn(['favorites'],
+        favorites => favorites.delete(action.payload.favorite));
     default:
       return state;
   }
