@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { connect } from 'react-redux';
+
 import _ from 'lodash';
 import faker from 'faker';
 
@@ -17,6 +19,8 @@ import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { ArrowBack } from '@material-ui/icons';
+
+import store from '../store';
 
 import SearchBar from './searchbar';
 import Navbar from './navbar';
@@ -36,13 +40,19 @@ const styles = theme => ({
 
   backToFavoriteButton: {
     position:        'absolute',
-    bottom:          20,
-    right:           40,
+    top:             380,
+    left:            370,
     color:           '#fff',
-    backgroundColor: '#43d3af'
+    backgroundColor: '#43d3af',
   }
 });
 
+
+const mapStateToProps = state => {
+  return { advertisers: state.advertisers };
+};
+
+@connect(mapStateToProps)
 @withStyles(styles)
 export default class Advertisers extends React.Component {
   constructor(props) {
@@ -109,11 +119,13 @@ export default class Advertisers extends React.Component {
       <Grid container className={classes.root}>
         <Navbar navbarTitle={<SearchBar />} />
         <ScrollArea className={classes.scrollArea}
+                    speed={0.1}
                     onScroll={this.handleScroll}
                     smoothScrolling={true}
                     horizontal={false}>
           <TransitionGroup>
-            <CSSTransition appear timeout={400}
+            <CSSTransition appear
+                           timeout={400}
                            classNames={{ appear: 'animated fadeIn' }}>
               <List className={classes.root} dense={dense}>
                 <Grid item>
