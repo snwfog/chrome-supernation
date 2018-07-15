@@ -19,9 +19,10 @@ import { grey } from '@material-ui/core/colors';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Fade from '@material-ui/core/Fade';
 import { ArrowBack } from '@material-ui/icons';
 
-import { FETCH_ADVERTISERS } from '../actions';
+import { ADVERTISERS_FETCH } from '../actions';
 
 import SearchBar from './searchbar';
 import Navbar from './navbar';
@@ -55,7 +56,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchAdvertisers: () => dispatch(({ type: FETCH_ADVERTISERS }))
+    fetchAdvertisers: () => dispatch(({ type: ADVERTISERS_FETCH }))
   }
 };
 
@@ -98,6 +99,10 @@ export default class Advertisers extends React.Component {
     }
   };
 
+  componentDidMount() {
+
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     console.log('should update?');
     return true;
@@ -116,24 +121,20 @@ export default class Advertisers extends React.Component {
                     onScroll={this.handleScroll}
                     smoothScrolling={true}
                     horizontal={false}>
-          <TransitionGroup>
-            <CSSTransition appear
-                           timeout={400}
-                           classNames={{ appear: 'animated fadeIn' }}>
-              <List className={classes.root} dense={dense}>
-                <Grid item>
-                  {_.map(advertisers, (advertiser) => {
-                    return (
-                      <Advertiser key={advertiser.id}
-                                  dense={dense}
-                                  advertiser={advertiser}
-                                  favorite={false} />
-                    )
-                  })}
-                </Grid>
-              </List>
-            </CSSTransition>
-          </TransitionGroup>
+          <Fade in={true} timeout={760}>
+            <List className={classes.root} dense={dense}>
+              <Grid item>
+                {_.map(advertisers, (advertiser) => {
+                  return (
+                    <Advertiser key={advertiser.id}
+                                dense={dense}
+                                advertiser={advertiser}
+                                favorite={false} />
+                  )
+                })}
+              </Grid>
+            </List>
+          </Fade>
         </ScrollArea>
 
         <Button className={classes.backToFavoriteButton}

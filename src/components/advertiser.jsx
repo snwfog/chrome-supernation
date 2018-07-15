@@ -1,16 +1,19 @@
 import React from 'react'
 
-import PropTypes from 'prop-types';
-import MomentPropTypes from 'react-moment-proptypes';
+import { connect } from 'react-redux';
 
-import classNames from 'classnames';
+import PropTypes from 'prop-types';
 
 import moment from 'moment';
 
 import Paper from '@material-ui/core/Paper';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar';
@@ -18,8 +21,9 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
-import { SupervisorAccount, StarBorder, Star } from '@material-ui/icons';
+import { Star, StarBorder, SupervisorAccount } from '@material-ui/icons';
 import Grow from '@material-ui/core/Grow';
+import { FAVORITES_ADD } from "../actions";
 
 const styles = theme => ({
   advertiser: {
@@ -69,12 +73,21 @@ const styles = theme => ({
   },
 });
 
+const mapDispatchToProps = dispatch => {
+  return {
+    addFavorites: () => dispatch(({ type: FAVORITES_ADD }))
+  }
+};
+
+@connect(null, mapDispatchToProps)
 @withStyles(styles)
 class Advertiser extends React.Component {
   constructor(props) {
     super(props);
     this._elapseUpdateInterval = 10; // ms
     this._elapseTickLimit      = props.elapseTimeLimit / this._elapseUpdateInterval;
+
+    this.state = { dialogFavoritesRemove: false };
   }
 
   static propTypes = {
@@ -103,6 +116,9 @@ class Advertiser extends React.Component {
   };
 
   handleAdvertiserSecondaryAction = () => {
+    if (this.props.favorite) {
+      this.setState({ dialogFavoritesRemove: !this.state.dialogFavoritesRemove });
+    }
     // chrome.storage.sync.set({ email: 'charles@stackadapt.com' }, () => {
     //   console.log('sync\'ed');
     // });
@@ -224,6 +240,20 @@ class Advertiser extends React.Component {
                 <StarBorder style={{ color: '#43d3af' }} />}
             </IconButton>
           </ListItemSecondaryAction>
+          <Dialog open={this.state.dialogFavoritesRemove}>
+            <DialogTitle>Remove {advertiser.fullName} from
+                         favorites?</DialogTitle>
+            {/*<DialogContent>*/}
+            {/*<DialogContentText>Remove {advertiser.fullName} from*/}
+            {/*favorites?</DialogContentText>*/}
+            {/*</DialogContent>*/}
+            <DialogActions>
+              <Button color="primary" onClick={() => {
+                this.setState({ dialogFavoritesRemove: false })
+              }}>Back</Button>
+              <Button autoFocus color="primary">Confirm</Button>
+            </DialogActions>
+          </Dialog>
         </ListItem>
       </Paper>
     )

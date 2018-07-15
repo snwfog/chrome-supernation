@@ -4,8 +4,11 @@ import { connect } from 'react-redux';
 
 import { withRouter } from 'react-router-dom';
 
+import _ from 'lodash';
 import moment from 'moment';
 import faker from 'faker';
+
+import KeyboardEventHandler from 'react-keyboard-event-handler';
 
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
@@ -39,6 +42,9 @@ const mapStateToProps = state => {
 export default class Favorites extends React.Component {
   constructor(props) {
     super(props);
+    // if (_.isEmpty(props.favorites)) {
+    //   this.props.history.push('/advertisers');
+    // }
     console.log('favorites constructed');
   }
 
@@ -49,27 +55,41 @@ export default class Favorites extends React.Component {
     }
   };
 
+  handleKeyPress = (key, event) => {
+    if (key === 'down') {
+      this.props.history.push('/advertisers');
+    }
+  };
+
   render() {
     const { classes, favorites } = this.props;
 
     return (
-      <Grid container className={classes.root} onWheel={this.handleScroll}>
+      <Grid container
+            className={classes.root}
+            onWheel={this.handleScroll}>
+        <KeyboardEventHandler handleKeys={['down']}
+                              onKeyEvent={this.handleKeyPress} />
         <Navbar navbarTitle={
           <Typography variant="title" style={{ flexGrow: 1 }}>
             Favorites
           </Typography>
         } />
 
-        <List className={classes.list}>
-          <Grid item>
-            {_.map(favorites, (favorite) => {
-              return (
-                <Advertiser key={favorite.id} advertiser={favorite}
-                            favorite={true} />
-              )
-            })}
-          </Grid>
-        </List>
+        {
+          _.isEmpty(favorites) ?
+            <Typography>Please add some favorites</Typography> :
+            <List className={classes.list}>
+              <Grid item>
+                {_.map(favorites, (favorite) => {
+                  return (
+                    <Advertiser key={favorite.id} advertiser={favorite}
+                                favorite={true} />
+                  )
+                })}
+              </Grid>
+            </List>
+        }
       </Grid>
     )
   }

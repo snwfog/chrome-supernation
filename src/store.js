@@ -2,7 +2,11 @@ import { createStore } from 'redux';
 
 import faker from 'faker';
 import _ from 'lodash';
-import { FETCH_ADVERTISERS } from "./actions";
+import {
+  ADVERTISERS_FETCH,
+  ADVERTISERS_SEARCH,
+  FAVORITES_ADD
+} from "./actions";
 
 let advertisers = () => (_.times(20, () => {
   return {
@@ -14,7 +18,7 @@ let advertisers = () => (_.times(20, () => {
   }
 }));
 
-let favorites = () => (_.times(3, () => {
+let favorites = () => (_.times(4, () => {
   return {
     id:            faker.random.uuid(),
     email:         faker.internet.email(),
@@ -25,19 +29,27 @@ let favorites = () => (_.times(3, () => {
 }));
 
 const initialState = {
-  favorites:   favorites(),
-  advertisers: advertisers(),
+  advertiserSearch: null,
+  favorites:        favorites(),
+  advertisers:      advertisers(),
 };
 
 const rootReducer = (state = initialState, action) => {
   console.log(action);
   switch (action.type) {
-    case FETCH_ADVERTISERS:
-      console.log('fetching advertisers...');
+    case ADVERTISERS_FETCH:
       return {
         ...state,
         advertisers: [...state.advertisers, ...advertisers()]
       };
+    case ADVERTISERS_SEARCH:
+      return {
+        ...state,
+        advertiserSearchName: action.advertiserSearchName
+      };
+
+    case FAVORITES_ADD:
+
     default:
       return state;
   }
