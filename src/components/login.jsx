@@ -64,7 +64,7 @@ export default class Login extends React.Component {
   handleSuperPlatform = () => {
     console.log(this.state);
     if (!_.isEmpty(this.state.superName) && !_.isEmpty(this.state.superPassword)) {
-      this.props.history.push('/listing');
+      this.props.history.push('/favorites');
     } else {
       if (_.isEmpty(this.state.superName)) {
         this.setState({ showTooltipSupernameRequired: true });

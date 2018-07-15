@@ -1,13 +1,23 @@
 import React from 'react';
 
-import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  HashRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from 'react-router-dom';
+
 import Grid from '@material-ui/core/Grid';
 
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { blue, grey } from '@material-ui/core/colors';
+import {
+  withStyles,
+  MuiThemeProvider,
+  createMuiTheme
+} from '@material-ui/core/styles';
 
 import Login from './login';
-import Listing from './listing';
+import Favorites from './favorites';
+import Advertisers from './advertisers';
 
 const theme = createMuiTheme({
   palette: {
@@ -21,7 +31,22 @@ const theme = createMuiTheme({
   }
 });
 
-class Supernation extends React.Component {
+const styles = theme => ({
+  root: {
+    width:     500,
+    maxHeight: 500,
+  },
+
+  animatedSwitch: {
+    position:  'relative',
+    '& > div': {
+      position: 'absolute'
+    }
+  }
+});
+
+@withStyles(styles)
+export default class Supernation extends React.Component {
   constructor(props) {
     super(props);
 
@@ -31,25 +56,27 @@ class Supernation extends React.Component {
   }
 
   state = {
-    signedIn:       false,
+    signedIn:       true,
     lastSignedInAt: null,
   };
 
-  componentWillMount() {
-  }
-
   render() {
+    const { classes } = this.props;
+
     return (
       <Router>
         <MuiThemeProvider theme={theme}>
-          <Grid container
-                style={{
-                  width: 500,
-                  // background:     '#212121'
-                }}>
+          <Grid container className={classes.root}>
             <Switch>
-              <Route exact path="/" component={Login} />
-              <Route exact path="/listing" component={Listing} />
+              <Route exact path="/"
+                // component={<Login signedIn={this.state.signedIn} />}
+                     render={() => {
+                       return this.state.signedIn ?
+                         <Redirect to='/favorites' /> :
+                         <Login />
+                     }} />
+              <Route exact path="/favorites" component={Favorites} />
+              <Route exact path="/advertisers" component={Advertisers} />
             </Switch>
           </Grid>
         </MuiThemeProvider>
@@ -57,5 +84,3 @@ class Supernation extends React.Component {
     )
   }
 }
-
-export default Supernation;

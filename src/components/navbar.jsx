@@ -2,12 +2,12 @@ import React from 'react';
 
 import { withRouter } from 'react-router-dom';
 
+import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import InputAdornment from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -16,9 +16,7 @@ import {
   SortByAlpha,
   PowerSettingsNew,
   MoreVert,
-  Search as Magnifier
 } from '@material-ui/icons';
-import Input from '@material-ui/core/Input';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
@@ -31,8 +29,29 @@ const theme = createMuiTheme({
   }
 });
 
+const styles = theme => ({
+  root: {
+    background:   'linear-gradient(270deg,#3bf5c6,#3381ec)',
+    border:       3,
+    borderColor:  '#43d3af',
+    boxShadow:    '0 3px 5px 2px rgba(67, 211, 175, .3)',
+    borderRadius: '3px 3px 0 0'
+  }
+});
+
 @withRouter
-export default class Search extends React.Component {
+@withStyles(styles)
+export default class Navbar extends React.Component {
+  // static propTypes = {
+  //   titleComponent: PropTypes.instanceOf(React.Component).isRequired,
+  // };
+
+  static defaultProps = {
+    navbarTitle: <Typography variant="title" style={{flexGrow: 1}}>
+                   Untitled
+                 </Typography>
+  };
+
   state = {
     menuAnchorEl: null,
   };
@@ -51,29 +70,13 @@ export default class Search extends React.Component {
   };
 
   render() {
+    const { classes, navbarTitle } = this.props;
+
     return (
-      <AppBar position="static"
-              style={{
-                background:   'linear-gradient(270deg,#3bf5c6,#3381ec)',
-                border:       3,
-                borderColor:  '#43d3af',
-                boxShadow:    '0 3px 5px 2px rgba(67, 211, 175, .3)',
-                borderRadius: '3px 3px 0 0'
-              }}>
+      <AppBar position="static" className={classes.root}>
         <Toolbar>
           <MuiThemeProvider theme={theme}>
-            <FormControl fullWidth>
-              <Input fullWidth
-                     id="search"
-                     type="text"
-                     placeholder="stackbot@stackadapt.com"
-                     startAdornment={
-                       <InputAdornment position="start"
-                                       style={{ marginTop: 3, marginRight: 8 }}>
-                         <Magnifier />
-                       </InputAdornment>
-                     } />
-            </FormControl>
+            {navbarTitle}
             <IconButton onClick={this.openMenu}>
               <MoreVert />
             </IconButton>

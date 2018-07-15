@@ -65,6 +65,7 @@ const styles = theme => ({
   },
 });
 
+@withStyles(styles)
 class Advertiser extends React.Component {
   constructor(props) {
     super(props);
@@ -74,16 +75,14 @@ class Advertiser extends React.Component {
 
   static propTypes = {
     elapseTimeLimit: PropTypes.number,
-    emailAddress:    PropTypes.string,
-    lastSuperTime:   MomentPropTypes.momentObj,
+    advertiser:      PropTypes.object,
     dense:           PropTypes.bool,
     favorite:        PropTypes.bool,
   };
 
   static defaultProps = {
     elapseTimeLimit: 800,
-    emailAddress:    'charles@stackadapt.com',
-    lastSuperTime:   null,
+    advertiser:      null,
     dense:           false,
     favorite:        false,
   };
@@ -142,9 +141,8 @@ class Advertiser extends React.Component {
     const {
             dense,
             favorite,
+            advertiser,
             classes,
-            lastSuperTime,
-            emailAddress
           } = this.props;
 
     const {
@@ -188,8 +186,10 @@ class Advertiser extends React.Component {
                               thickness={2}
                               className={classes.fabProgress} />}
           </Button>
-          <ListItemText primary={emailAddress}
-                        secondary={`Last super: ${lastSuperTime ? lastSuperTime.fromNow() : 'Never'}`} />
+          <ListItemText primary={advertiser.email}
+                        secondary={`Last super: ${advertiser.lastSuperTime ?
+                          moment(advertiser.lastSuperTime).fromNow() :
+                          'Never'}`} />
           <ListItemSecondaryAction
             onClick={this.handleAdvertiserSecondaryAction}>
             <IconButton>
@@ -205,4 +205,4 @@ class Advertiser extends React.Component {
 }
 
 // style={{ color: 'linear-gradient(270deg,#3bf5c6,#3381ec)' }} />
-export default withStyles(styles)(Advertiser);
+export default Advertiser;
