@@ -17,7 +17,11 @@ import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 
 import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import { ArrowBack } from '@material-ui/icons';
@@ -35,6 +39,10 @@ import Advertiser from './advertiser';
 const styles = theme => ({
   root: {
     backgroundColor: grey["100"]
+  },
+
+  card: {
+    margin: 10,
   },
 
   scrollArea: {
@@ -143,21 +151,33 @@ export default class Advertisers extends React.PureComponent {
                     smoothScrolling={true}
                     horizontal={false}>
           <Fade in={true} timeout={760}>
-            <List className={classes.root} dense={dense}>
-              <Grid item>
-                {this.props.advertisersFiltered
-                  .map((advertiser, index) => {
-                    return (
-                      <Advertiser key={advertiser.get('id')}
-                                  dense={dense}
-                                  advertiser={advertiser}
-                                  isFavorite={Boolean(advertiser.get('isFavorite'))}
-                                  secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
-                      />
-                    )
-                  })}
-              </Grid>
-            </List>
+            {this.props.advertisersFiltered.isEmpty() ?
+              <Card className={classes.card}>
+                <CardContent>
+                  <Typography gutterBottom variant="headline">
+                    Tips:
+                  </Typography>
+                  <Typography component="p">
+                    No advertisers found.
+                  </Typography>
+                </CardContent>
+              </Card> :
+              <List className={classes.root} dense={dense}>
+                <Grid item>
+                  {this.props.advertisersFiltered
+                    .map((advertiser, index) => {
+                      return (
+                        <Advertiser key={advertiser.get('id')}
+                                    dense={dense}
+                                    advertiser={advertiser}
+                                    isFavorite={Boolean(advertiser.get('isFavorite'))}
+                                    secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
+                        />
+                      )
+                    })}
+                </Grid>
+              </List>
+            }
           </Fade>
         </ScrollArea>
 

@@ -1,5 +1,8 @@
 Stackadapt web supernation chrome plugin
 
+TODO: Need to fix search speed, going through store is slow,
+need to use state to feel snappier
+
 To supernate, login, then creates unique id that expires in 2 week,
 then whenever supernate, rest api server to obtain token, then
 open chrome with a new token in query string, use this query string
