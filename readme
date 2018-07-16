@@ -1,1 +1,7 @@
 Stackadapt web supernation chrome plugin
+
+To supernate, login, then creates unique id that expires in 2 week,
+then whenever supernate, rest api server to obtain token, then
+open chrome with a new token in query string, use this query string
+to authenticate, then login, drop session, and redirect
+to overview page

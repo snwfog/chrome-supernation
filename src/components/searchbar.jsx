@@ -2,14 +2,14 @@ import React from 'react';
 
 import { connect } from 'react-redux';
 
+import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
 
 import FormControl from '@material-ui/core/FormControl';
 import InputAdornment from '@material-ui/core/FormControl';
 import { Search as Magnifier } from '@material-ui/icons';
 import Input from '@material-ui/core/Input';
-
-import { ADVERTISERS_SEARCH } from "../actions";
 
 const styles = theme => ({
   adornment: {
@@ -18,31 +18,22 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps    = (state) => ({ advertiserSearchName: state.get('advertiserSearchName') });
-const mapDispatchToProps = dispatch => {
-  return {
-    handleAdvertiserSearch: (advertiserSearchName) => dispatch({
-      advertiserSearchName,
-      type: ADVERTISERS_SEARCH,
-    })
-  }
-};
+const mapStateToProps    = state => ({ advertiserSearchName: state.get('advertiserSearchName') });
+const mapDispatchToProps = dispatch => ({});
 
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styles)
 export default class SearchBar extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { advertiserSearchName: '' };
   }
 
-  handleAdvertiserSearch = (event) => {
-    console.log('searching for', event.target.value);
-    let advertiserSearchName = event.target.value;
-    this.setState({ advertiserSearchName },
-      () => {
-        this.props.handleAdvertiserSearch(advertiserSearchName)
-      });
+  static propTypes = {
+    onSearch: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    onSearch: null,
   };
 
   // componentDidMount() {}
@@ -54,9 +45,10 @@ export default class SearchBar extends React.PureComponent {
         <Input autoFocus
                id="search"
                type="text"
+               autoComplete="off"
                placeholder="stackbot@stackadapt.com"
-               value={this.state.advertiserSearchName}
-               onChange={this.handleAdvertiserSearch}
+               value={this.props.advertiserSearchName}
+               onChange={(event) => this.props.onSearch(event.target.value)}
                startAdornment={
                  <InputAdornment className={classes.adornment} position="start">
                    <Magnifier />

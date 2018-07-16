@@ -22,7 +22,11 @@ import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import { ArrowBack } from '@material-ui/icons';
 
-import { ADVERTISERS_FETCH, FAVORITES_ADD } from '../actions';
+import {
+  ADVERTISERS_FETCH,
+  ADVERTISERS_SEARCH,
+  FAVORITES_ADD
+} from '../actions';
 
 import SearchBar from './searchbar';
 import Navbar from './navbar';
@@ -52,7 +56,7 @@ const styles = theme => ({
 
 const mapStateToProps = state => {
   return {
-    advertisers: state.get('advertisers'),
+    advertisersFiltered: state.get('advertisersFiltered'),
   };
 };
 
@@ -60,6 +64,13 @@ const mapDispatchToProps = dispatch => {
   return {
     advertisersFetch: () => dispatch(({
       type: ADVERTISERS_FETCH
+    })),
+
+    advertisersSearch: (searchTerm) => dispatch(({
+      type:    ADVERTISERS_SEARCH,
+      payload: {
+        searchTerm
+      }
     })),
 
     favoritesAdd: (advertiser, index) => dispatch(({
@@ -101,7 +112,7 @@ export default class Advertisers extends React.PureComponent {
 
   handleScroll = ({ realHeight, containerHeight, topPosition }) => {
     // console.log(realHeight, containerHeight, topPosition);
-    let counts          = this.props.advertisers.size;
+    let counts          = this.props.advertisersFiltered.size;
     let itemHeight      = (realHeight - containerHeight) / counts;
     // Trigger reload at approx few items left to display
     let triggerPosition = realHeight - containerHeight - itemHeight * 0.2;
@@ -111,10 +122,6 @@ export default class Advertisers extends React.PureComponent {
     }
   };
 
-  componentDidMount() {
-
-  }
-
   // Using pure component implement this already using shallow comparison
   // shouldComponentUpdate(nextProps, nextState) {
   //   console.log('should update?');
@@ -122,13 +129,14 @@ export default class Advertisers extends React.PureComponent {
   // }
 
   render() {
-    const { classes, dense, advertisers } = this.props;
+    const { classes, dense } = this.props;
 
     return (
       <Grid container
             className={classes.root}
             onWheel={this.handleScrollUp}>
-        <Navbar navbarTitle={<SearchBar />} />
+        <Navbar
+          navbarTitle={<SearchBar onSearch={this.props.advertisersSearch} />} />
         <ScrollArea className={classes.scrollArea}
                     speed={0.2}
                     onScroll={this.handleScroll}
@@ -137,16 +145,17 @@ export default class Advertisers extends React.PureComponent {
           <Fade in={true} timeout={760}>
             <List className={classes.root} dense={dense}>
               <Grid item>
-                {advertisers.map((advertiser, index) => {
-                  return (
-                    <Advertiser key={advertiser.get('id')}
-                                dense={dense}
-                                advertiser={advertiser}
-                                isFavorite={Boolean(advertiser.get('isFavorite'))}
-                                secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
-                    />
-                  )
-                })}
+                {this.props.advertisersFiltered
+                  .map((advertiser, index) => {
+                    return (
+                      <Advertiser key={advertiser.get('id')}
+                                  dense={dense}
+                                  advertiser={advertiser}
+                                  isFavorite={Boolean(advertiser.get('isFavorite'))}
+                                  secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
+                      />
+                    )
+                  })}
               </Grid>
             </List>
           </Fade>

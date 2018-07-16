@@ -18,7 +18,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 import { Star, StarBorder, SupervisorAccount } from '@material-ui/icons';
 import Grow from '@material-ui/core/Grow';
-import { FAVORITES_ADD } from "../actions";
 
 const styles = theme => ({
   advertiser: {
@@ -90,7 +89,7 @@ export default class Advertiser extends React.PureComponent {
     this._elapseUpdateInterval = 10; // ms
     this._elapseTickLimit      = props.elapseTimeLimit / this._elapseUpdateInterval;
 
-    console.log(props);
+    // console.log(props);
   }
 
   static propTypes = {
@@ -218,27 +217,22 @@ export default class Advertiser extends React.PureComponent {
                               className={classes.fabProgress} />}
           </Button>
           <Grid container direction="column">
-            {dense ?
-              <div>
-                <Typography variant="title" className={classes.heading}>
-                  {advertiser.get('email')}
-                </Typography>
-              </div> :
+            <Typography gutterBottom className={classes.heading}
+                        variant="title">
+              {advertiser.get('fullName')}
+            </Typography>
 
-              <div>
-                <Typography gutterBottom className={classes.heading}
-                            variant="title">
-                  {advertiser.get('fullName')}
-                </Typography>
-                <Typography variant="subheading" className={classes.subheading}>
-                  {advertiser.get('email')}
-                </Typography>
-                <Typography variant="subheading" className={classes.subheading}>
-                  {`Last super: ${advertiser.get('lastSuperTime') ?
-                    moment(advertiser.get('lastSuperTime')).fromNow() :
-                    'Never'}`}
-                </Typography>
-              </div>
+            <Typography variant="title" className={classes.subheading}>
+              {advertiser.get('email')}
+            </Typography>
+
+            {
+              !dense &&
+              <Typography variant="subheading" className={classes.subheading}>
+                {`Last super: ${advertiser.get('lastSuperTime') ?
+                  moment(advertiser.get('lastSuperTime')).fromNow() :
+                  'Never'}`}
+              </Typography>
             }
           </Grid>
           <ListItemSecondaryAction onClick={this.props.secondaryAction}>
