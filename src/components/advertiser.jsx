@@ -18,6 +18,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 import { Star, StarBorder, SupervisorAccount } from '@material-ui/icons';
 import Grow from '@material-ui/core/Grow';
+import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
   advertiser: {
@@ -164,7 +165,7 @@ export default class Advertiser extends React.PureComponent {
     const { first_name, last_name, email, avatar, company_name } = advertiser;
 
     return (
-      <Paper className={classes.paper}>
+      <React.Fragment>
         <ListItem className={classes.advertiser}>
           <Button className={classes.avatarButton}
                   onMouseEnter={this.togglePopoverIcon}
@@ -217,7 +218,8 @@ export default class Advertiser extends React.PureComponent {
             </IconButton>
           </ListItemSecondaryAction>
         </ListItem>
-      </Paper>
+        <Divider variant="inset" component="li" />
+      </React.Fragment>
     )
   }
 }

@@ -3,6 +3,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -16,6 +17,7 @@ import {
   SortByAlpha,
   PowerSettingsNew,
   MoreVert,
+  Menu as MenuIcon
 } from '@material-ui/icons';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -31,11 +33,9 @@ const theme = createMuiTheme({
 
 const styles = theme => ({
   root: {
-    background:   'linear-gradient(270deg,#3bf5c6,#3381ec)',
-    border:       3,
-    borderColor:  '#43d3af',
-    boxShadow:    '0 3px 5px 2px rgba(67, 211, 175, .3)',
-    borderRadius: '3px 3px 0 0'
+    color: 'black',
+    background:   'white',
+    boxShadow: 'none!important'
   },
 
   menu: {
@@ -79,12 +79,17 @@ export default class Navbar extends React.PureComponent {
     return (
       <AppBar position="static" className={classes.root}>
         <Toolbar>
-          <MuiThemeProvider theme={theme}>
-            {navbarTitle}
-            <IconButton onClick={this.openMenu}>
-              <MoreVert />
-            </IconButton>
-          </MuiThemeProvider>
+            <Box
+              display='flex'
+              alignItems='center'
+              justifyContent='space-between'
+              width='100%'
+            >
+              {navbarTitle}
+              <IconButton onClick={this.openMenu}>
+                <MenuIcon />
+              </IconButton>
+            </Box>
           <Menu className={classes.menu}
                 anchorEl={this.state.menuAnchorEl}
                 open={Boolean(this.state.menuAnchorEl)}
