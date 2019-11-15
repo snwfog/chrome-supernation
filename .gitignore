@@ -17,6 +17,7 @@
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
+.idea
 
 # Gradle
 .idea/**/gradle.xml
@@ -115,4 +116,5 @@ typings/
 # next.js build output
 .next
 
-!/src/components/supernation.jsx
+# build folder
+dist
