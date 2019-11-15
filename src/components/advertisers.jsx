@@ -18,7 +18,7 @@ import ScrollArea from 'react-scrollbar';
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 
-import { List, ListItem } from '@material-ui/core';
+import { List, ListItem, Box } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -27,6 +27,7 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import { ArrowBack } from '@material-ui/icons';
+import Divider from '@material-ui/core/Divider';
 
 import {
   ADVERTISERS_FETCH,
@@ -44,13 +45,15 @@ const styles = theme => ({
     paddingLeft:     30,
   },
 
+  header: {
+    backgroundImage: `linear-gradient(to right, #0061FF , #00FFE0)`
+  },
+
   empty: {
     margin: 10,
   },
 
-  list: {
-
-  },
+  list: {},
 
   card: {
     borderTop: '1px solid grey'
@@ -58,10 +61,28 @@ const styles = theme => ({
 
   scrollArea: {
     width:     '100%',
-    // height:    500,
-    maxHeight: 500,
+    // minHeight: 500,
+    maxHeight: 450,
     // overflow:  'auto',
   },
+
+  // On the bottom
+  scrollShadow: {
+    paddingTop:    8,
+    paddingBottom: 16,
+    bottom:        0,
+    width:         450,
+    zIndex:        10,
+    // height:        20,
+    left:          0,
+    boxShadow:     '0px -10px 20px #EEE',
+    borderTop:     `1px solid ${grey['200']}`,
+    margin:        0,
+  },
+
+  scrollShadowText: {
+    fontSize: 9,
+  }
 });
 
 
@@ -136,7 +157,7 @@ export default class Advertisers extends React.PureComponent {
     // }
   };
 
-  handleScroll = ({ realHeight, containerHeight, topPosition }) => {
+  handleReachBottom = ({ realHeight, containerHeight, topPosition }) => {
     // console.log(realHeight, containerHeight, topPosition);
     let counts          = this.props.advertisersFiltered.size;
     let itemHeight      = (realHeight - containerHeight) / counts;
@@ -157,43 +178,52 @@ export default class Advertisers extends React.PureComponent {
   render() {
     const { classes } = this.props;
     return (
-      <Grid container
-            className={classes.grid}
-            onWheel={this.handleScrollUp}>
-        <Navbar
-          navbarTitle={<SearchBar onSearch={this.props.advertisersSearch} />} />
-        <ScrollArea className={classes.scrollArea}
-                    speed={0.2}
-                    onScroll={this.handleScroll}
-                    smoothScrolling={true}
-                    horizontal={false}>
-          <Fade in={true} timeout={760}>
-            {this.props.advertisersFiltered.isEmpty() ?
-              <Card className={classes.empty}>
-                <CardContent>
-                  <Typography gutterBottom>
-                    Tips:
-                  </Typography>
-                  <Typography component="p">
-                    No advertisers found.
-                  </Typography>
-                </CardContent>
-              </Card>
-              :
-              <List className={classes.list}>
-                {this.props.advertisersFiltered
-                  .map((advertiser, index) =>
-                    <Advertiser
-                      className={classes.card}
-                      key={_.get(advertiser, 'id')}
-                      advertiser={advertiser}
-                      isFavorite={Boolean(_.get(advertiser, 'isFavorite'))}
-                      secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
-                    />
-                  )}
-              </List>}
-          </Fade>
-        </ScrollArea>
+      <Grid container>
+        <Box height="5px" width="100%" className={classes.header} />
+        <Grid container
+              className={classes.grid}
+              onWheel={this.handleScrollUp}>
+          <Navbar
+            navbarTitle={<SearchBar
+              onSearch={this.props.advertisersSearch} />} />
+          <ScrollArea className={classes.scrollArea}
+                      speed={0.2}
+                      onScroll={this.handleReachBottom}
+                      smoothScrolling={true}
+                      horizontal={false}>
+            <Fade in={true} timeout={760}>
+              {this.props.advertisersFiltered.isEmpty() ?
+                <Card className={classes.empty}>
+                  <CardContent>
+                    <Typography gutterBottom>
+                      Tips:
+                    </Typography>
+                    <Typography component="p">
+                      No advertisers found.
+                    </Typography>
+                  </CardContent>
+                </Card>
+                :
+                <List className={classes.list}>
+                  {this.props.advertisersFiltered
+                    .map((advertiser, index) =>
+                      <Advertiser
+                        className={classes.card}
+                        key={_.get(advertiser, 'id')}
+                        advertiser={advertiser}
+                        isFavorite={Boolean(_.get(advertiser, 'isFavorite'))}
+                        secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
+                      />
+                    )}
+                </List>}
+            </Fade>
+          </ScrollArea>
+        </Grid>
+        <Box className={classes.scrollShadow} textAlign={"center"}>
+          <Typography className={classes.scrollShadowText}>
+            Scroll down for full list
+          </Typography>
+        </Box>
       </Grid>
     )
   }

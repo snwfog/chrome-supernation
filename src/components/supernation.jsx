@@ -44,8 +44,8 @@ const styles = theme => ({
   list: {
     // overflow:  'auto',
     // maxHeight: 400,
-    minHeight: 200,
-    width:     '100%'
+    // minHeight: 600,
+    width: '100%'
   }
 });
 

@@ -46,7 +46,7 @@ const rootReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADVERTISERS_FETCH:
       console.log("fetching advertisers");
-      let advertisers = action.payload;
+      let advertisers = _.get(action, 'payload', List());
       return state.merge({
         advertisers:         state.get('advertisers').concat(advertisers),
         advertisersFiltered: state.get('advertisersFiltered').concat(advertisers)

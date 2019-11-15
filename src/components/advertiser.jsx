@@ -29,15 +29,23 @@ const styles = theme => ({
   },
 
   fab: {
-    marginRight: 40,
-    width:       50,
-    height:      50,
+    disableRipple: true,
+    marginRight:   40,
+    width:         50,
+    height:        50,
+  },
+
+  fabProgress: {
+    disableRipple: true,
+    color:         '#00FFE0',
+    position:      'absolute',
   },
 
   avatar: {
-    position: 'absolute',
-    width:    50,
-    height:   50,
+    disableRipple: true,
+    position:      'absolute',
+    width:         50,
+    height:        50,
   },
 
   heading: {
@@ -58,10 +66,6 @@ const styles = theme => ({
     margin: 10,
   },
 
-  fabProgress: {
-    color:    '#00FFE0',
-    position: 'absolute',
-  },
 });
 
 const mapDispatchToProps = dispatch => {
@@ -206,7 +210,7 @@ export default class Advertiser extends React.PureComponent {
             <CircularProgress
               className={classes.fabProgress}
               variant={"determinate"}
-              thickness={3}
+              thickness={2}
               size={50}
               value={elapseProgress}
             />}
@@ -214,7 +218,7 @@ export default class Advertiser extends React.PureComponent {
             {superInProgress &&
             <CircularProgress
               className={classes.fabProgress}
-              thickness={3}
+              thickness={2}
               size={50}
             />}
           </Fab>
