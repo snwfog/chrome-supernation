@@ -33,6 +33,7 @@
   "permissions": [
     "storage",
     "activeTab",
-    "tabs"
+    "tabs",
+    "system.display"
   ]
 }

@@ -76,10 +76,10 @@ export default class Supernation extends React.PureComponent {
                   // component={<Login signedIn={this.state.signedIn} />}
                        render={() => {
                          return this.state.signedIn ?
-                           <Redirect to='/favorites' /> :
+                           <Redirect to='/advertisers' /> :
                            <Login />;
                        }} />
-                <Route exact path="/favorites" component={Favorites} />
+                {/*<Route exact path="/favorites" component={Favorites} />*/}
                 <Route exact path="/advertisers" component={Advertisers} />
               </Switch>
             </Box>
