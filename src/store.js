@@ -65,8 +65,8 @@ const rootReducer = (state = initialState, action) => {
                                   .get('advertisers')
                                   .filter(advertiser =>
                                     // console.log('filtering', advertiser);
-                                    _.includes(_.toLower(advertiser.get('email')), searchTerm) ||
-                                    _.includes(_.toLower(advertiser.get('fullName')), searchTerm))
+                                    _.includes(_.toLower(_.get(advertiser, 'email')), searchTerm) ||
+                                    _.includes(_.toLower(_.get(advertiser, 'full_name')), searchTerm))
         });
       }
     case FAVORITES_ADD:

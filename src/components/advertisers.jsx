@@ -18,7 +18,7 @@ import ScrollArea from 'react-scrollbar';
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 
-import List from '@material-ui/core/List';
+import { List, ListItem } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -39,28 +39,29 @@ import Navbar from './navbar';
 import Advertiser from './advertiser';
 
 const styles = theme => ({
-  root: {
-    backgroundColor: grey["100"]
+  grid: {
+    backgroundColor: "#FFF",
+    paddingLeft:     30,
+  },
+
+  empty: {
+    margin: 10,
+  },
+
+  list: {
+
   },
 
   card: {
-    margin: 10,
+    borderTop: '1px solid grey'
   },
 
   scrollArea: {
     width:     '100%',
-    // height:    400,
-    maxHeight: 400,
+    // height:    500,
+    maxHeight: 500,
     // overflow:  'auto',
   },
-
-  backToFavoriteButton: {
-    position:        'absolute',
-    top:             380,
-    left:            370,
-    color:           '#fff',
-    backgroundColor: '#43d3af',
-  }
 });
 
 
@@ -157,7 +158,7 @@ export default class Advertisers extends React.PureComponent {
     const { classes } = this.props;
     return (
       <Grid container
-            className={classes.root}
+            className={classes.grid}
             onWheel={this.handleScrollUp}>
         <Navbar
           navbarTitle={<SearchBar onSearch={this.props.advertisersSearch} />} />
@@ -168,7 +169,7 @@ export default class Advertisers extends React.PureComponent {
                     horizontal={false}>
           <Fade in={true} timeout={760}>
             {this.props.advertisersFiltered.isEmpty() ?
-              <Card className={classes.card}>
+              <Card className={classes.empty}>
                 <CardContent>
                   <Typography gutterBottom>
                     Tips:
@@ -177,22 +178,20 @@ export default class Advertisers extends React.PureComponent {
                     No advertisers found.
                   </Typography>
                 </CardContent>
-              </Card> :
-              <List className={classes.root}>
-                <Grid item>
-                  {this.props.advertisersFiltered
-                    .map((advertiser, index) => {
-                      return (
-                        <Advertiser key={_.get(advertiser, 'id')}
-                                    advertiser={advertiser}
-                                    isFavorite={Boolean(_.get(advertiser, 'isFavorite'))}
-                                    secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
-                        />
-                      )
-                    })}
-                </Grid>
-              </List>
-            }
+              </Card>
+              :
+              <List className={classes.list}>
+                {this.props.advertisersFiltered
+                  .map((advertiser, index) =>
+                    <Advertiser
+                      className={classes.card}
+                      key={_.get(advertiser, 'id')}
+                      advertiser={advertiser}
+                      isFavorite={Boolean(_.get(advertiser, 'isFavorite'))}
+                      secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
+                    />
+                  )}
+              </List>}
           </Fade>
         </ScrollArea>
       </Grid>

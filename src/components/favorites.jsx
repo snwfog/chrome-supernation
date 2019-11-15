@@ -43,7 +43,7 @@ const styles = theme => ({
 
   //background: linear-gradient(to right, #3381EC, #3BF5C6);
   header: {
-    backgroundImage: `linear-gradient(to right, #3381EC , #3BF5C6)`
+    backgroundImage: `linear-gradient(to right, #0061FF , #00FFE0)`
   },
 
   card: {
