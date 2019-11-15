@@ -20,11 +20,17 @@ import { OpenInNew, FlashOn } from '@material-ui/icons';
 import Input from '@material-ui/core/Input';
 
 const theme = createMuiTheme({
-  palette: {
+  palette:    {
     type:    'light',
     primary: {
       main: '#43d3af'
     },
+  },
+  typography: {
+    fontFamily:      ["Roboto", "-apple-system",
+                       "BlinkMacSystemFont", "Segoe UI",
+                       "Arial", "sans-serif"].join(","),
+    useNextVariants: true,
   }
 });
 
@@ -105,7 +111,7 @@ export default class Login extends React.PureComponent {
                   height:    '200px',
                   alignSelf: 'center',
                 }}>
-            <Typography variant="title" align="left">
+            <Typography align="left">
               Supernation
             </Typography>
             <Grid container alignItems="center" justify="center">

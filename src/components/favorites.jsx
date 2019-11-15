@@ -100,7 +100,7 @@ export default class Favorites extends React.PureComponent {
         <KeyboardEventHandler handleKeys={['down']}
                               onKeyEvent={this.handleKeyPress} />
         <Navbar navbarTitle={
-          <Typography variant="title" style={{ flexGrow: 1 }}>
+          <Typography style={{ flexGrow: 1 }}>
             Favorites
           </Typography>
         } />
@@ -109,7 +109,7 @@ export default class Favorites extends React.PureComponent {
           favorites.isEmpty() ?
             <Card className={classes.card}>
               <CardContent>
-                <Typography gutterBottom variant="headline">
+                <Typography gutterBottom>
                   Tips:
                 </Typography>
                 <Typography component="p">

@@ -91,6 +91,21 @@ const mapDispatchToProps = dispatch => {
   }
 };
 
+let mockApi = 'http://www.mocky.io/v2/5dcdc4752e0000e17b72a06b';
+let options = {
+  headers: {
+    'Accept':       'application/json',
+    'Content-Type': 'application/json;charset=UTF-8',
+  },
+  mode:    'no-cors',
+};
+
+let fetchAdvertisers = () => {
+  fetch(mockApi, options)
+    .then(r => r.json())
+    .then(data => console.log(data))
+};
+
 @connect(mapStateToProps, mapDispatchToProps)
 @withRouter
 @withStyles(styles)
@@ -107,6 +122,11 @@ export default class Advertisers extends React.PureComponent {
   static defaultProps = {
     dense: true,
   };
+
+  componentWillMount() {
+    console.log("mounted");
+    fetchAdvertisers();
+  }
 
   handleBackToFavorite = () => {
     this.props.history.push('/favorites');
@@ -138,7 +158,6 @@ export default class Advertisers extends React.PureComponent {
 
   render() {
     const { classes, dense } = this.props;
-
     return (
       <Grid container
             className={classes.root}
@@ -154,7 +173,7 @@ export default class Advertisers extends React.PureComponent {
             {this.props.advertisersFiltered.isEmpty() ?
               <Card className={classes.card}>
                 <CardContent>
-                  <Typography gutterBottom variant="headline">
+                  <Typography gutterBottom>
                     Tips:
                   </Typography>
                   <Typography component="p">
@@ -182,7 +201,6 @@ export default class Advertisers extends React.PureComponent {
         </ScrollArea>
 
         <Button className={classes.backToFavoriteButton}
-                variant="fab"
                 onClick={this.handleBackToFavorite}>
           <ArrowBack />
         </Button>

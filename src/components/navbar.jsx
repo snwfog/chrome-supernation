@@ -51,7 +51,7 @@ export default class Navbar extends React.PureComponent {
   // };
 
   static defaultProps = {
-    navbarTitle: <Typography variant="title" style={{ flexGrow: 1 }}>
+    navbarTitle: <Typography style={{ flexGrow: 1 }}>
                    Untitled
                  </Typography>
   };

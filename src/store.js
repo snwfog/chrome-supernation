@@ -11,17 +11,19 @@ import {
   FAVORITES_ADD, FAVORITES_REMOVE
 } from "./actions";
 
-let advertisersFetch = () => (_.times(20, () => {
-  return Map({
-    id:            faker.random.uuid(),
-    email:         faker.internet.email(),
-    fullName:      faker.fake('{{name.lastName}} {{name.firstName}}'),
-    avatarUrl:     faker.image.avatar(),
-    lastSuperTime: null,
-  })
-}));
+// let advertisersFetch = () => (_.times(20, () => {
+//   return Map({
+//     id:            faker.random.uuid(),
+//     email:         faker.internet.email(),
+//     fullName:      faker.fake('{{name.lastName}} {{name.firstName}}'),
+//     avatarUrl:     faker.image.avatar(),
+//     lastSuperTime: null,
+//   })
+// }));
 
-let advertisers = advertisersFetch();
+let initialAdvertisers = () => {
+  return fetch(mockApi, options);
+};
 
 let favoritesFetch = () => (_.times(2, () => {
   return Map({
@@ -37,19 +39,25 @@ let favoritesFetch = () => (_.times(2, () => {
 const initialState = Map({
   advertiserSearchName: '',
   favorites:            OrderedSet.of(...favoritesFetch()),
-  advertisers:          List.of(...advertisers),
-  advertisersFiltered:  List.of(...advertisers)
+
+  advertisers:         List([]),
+  advertiserEmpty:     true,
+  advertisersFiltered: List([]),
 });
 
 const rootReducer = (state = initialState, action) => {
   console.log(action);
   switch (action.type) {
     case ADVERTISERS_FETCH:
-      let advertisers = advertisersFetch();
-      return state
-        .merge({
-          advertisers:         state.get('advertisers').concat(advertisers),
-          advertisersFiltered: state.get('advertisersFiltered').concat(advertisers)
+      console.log("fetching advertisers");
+      return advertisersFetch()
+        .then(r => {
+          let advertisers = [];
+          console.log(r);
+          return state.merge({
+            advertisers:         state.get('advertisers').concat(advertisers),
+            advertisersFiltered: state.get('advertisersFiltered').concat(advertisers)
+          });
         });
     case ADVERTISERS_SEARCH:
       let { searchTerm } = action.payload;

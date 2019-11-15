@@ -183,8 +183,6 @@ export default class Advertiser extends React.PureComponent {
       <Paper className={classes.paper}>
         <ListItem className={classes.advertiser}>
           <Button className={classes.avatarButton}
-                  mini={dense}
-                  variant="fab"
                   onMouseEnter={this.togglePopoverIcon}
                   onMouseLeave={() => {
                     this.togglePopoverIcon();
@@ -205,8 +203,7 @@ export default class Advertiser extends React.PureComponent {
                   classes.superIconOverlay} />
             </Grow>
             {elapseInProgress &&
-            <CircularProgress variant="determinate"
-                              value={elapseProgress / this._elapseTickLimit * 100}
+            <CircularProgress value={elapseProgress / this._elapseTickLimit * 100}
                               size={dense ? 42 : 62}
                               thickness={2}
                               className={classes.fabProgress} />}
@@ -217,18 +214,17 @@ export default class Advertiser extends React.PureComponent {
                               className={classes.fabProgress} />}
           </Button>
           <Grid container direction="column">
-            <Typography gutterBottom className={classes.heading}
-                        variant="title">
+            <Typography gutterBottom className={classes.heading}>
               {advertiser.get('fullName')}
             </Typography>
 
-            <Typography variant="title" className={classes.subheading}>
+            <Typography className={classes.subheading}>
               {advertiser.get('email')}
             </Typography>
 
             {
               !dense &&
-              <Typography variant="subheading" className={classes.subheading}>
+              <Typography className={classes.subheading}>
                 {`Last super: ${advertiser.get('lastSuperTime') ?
                   moment(advertiser.get('lastSuperTime')).fromNow() :
                   'Never'}`}

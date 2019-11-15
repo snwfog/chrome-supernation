@@ -1,13 +1,16 @@
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const path              = require('path');
 
 module.exports = {
-  output: {
+  optimization: {
+    minimize: false
+  },
+  output:       {
     path:     path.resolve('dist'),
     filename: 'supernation.js'
   },
-  module: {
+  module:       {
     rules: [
       {
         test:    /\.(js|jsx)$/,
