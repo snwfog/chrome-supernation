@@ -13,6 +13,7 @@ import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 
+import Box from '@material-ui/core/Box';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -26,6 +27,11 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Divider from '@material-ui/core/Divider';
+
 import { FAVORITES_REMOVE } from '../actions';
 
 import Navbar from './navbar'
@@ -33,7 +39,13 @@ import Advertiser from './advertiser';
 
 const styles = theme => ({
   root: {
-    backgroundColor: grey["100"],
+    //backgroundColor: grey["100"],
+  },
+  //theme.palette.common.white,
+
+  //background: linear-gradient(to right, #3381EC, #3BF5C6);
+  header: {
+    backgroundImage: `linear-gradient(to right, #3381EC , #3BF5C6)`
   },
 
   card: {
@@ -95,12 +107,14 @@ export default class Favorites extends React.PureComponent {
 
     return (
       <Grid container
-            className={classes.root}
             onWheel={this.handleScroll}>
         <KeyboardEventHandler handleKeys={['down']}
-                              onKeyEvent={this.handleKeyPress} />
+                              onKeyEvent={this.handleKeyPress}
+        />
+        <Box height="5px" width="100%" className={classes.header}/>
+
         <Navbar navbarTitle={
-          <Typography variant="title" style={{ flexGrow: 1 }}>
+          <Typography style={{ flexGrow: 1, color: 'black' }}>
             Favorites
           </Typography>
         } />

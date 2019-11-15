@@ -9,48 +9,22 @@ import {
 } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 
-import {
-  withStyles,
-  MuiThemeProvider,
-  createMuiTheme
-} from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import store from '../store';
-
 import Login from './login';
 import Favorites from './favorites';
 import Advertisers from './advertisers';
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#43d3af'
-    },
-    // background: {
-    //   main: grey["800"]
-    // },
-    // type:    'dark'
-  }
-});
+import theme from '../theme/theme';
 
-const styles = theme => ({
-  root: {
-    width:     500,
-    // minHeight: 300,
-  },
 
-  animatedSwitch: {
-    position:  'relative',
-    '& > div': {
-      position: 'absolute'
-    }
-  }
-});
-
-@withStyles(styles)
-export default class Supernation extends React.PureComponent {
-  constructor(props) {
+export default class Supernation extends React.PureComponent
+{
+  constructor (props)
+  {
     super(props);
 
     // chrome.storage.sync.get(['supernation'], (data) => {
@@ -59,33 +33,33 @@ export default class Supernation extends React.PureComponent {
   }
 
   state = {
-    signedIn:       true,
-    lastSignedInAt: null,
+    signedIn      : true,
+    lastSignedInAt: null
   };
 
-  render() {
-    const { classes } = this.props;
-
+  render ()
+  {
     return (
       <Router>
         <Provider store={store}>
           <MuiThemeProvider theme={theme}>
-            <Grid container className={classes.root}>
+            <Box component={Grid} container width="500px">
               <Switch>
                 <Route exact path="/"
                   // component={<Login signedIn={this.state.signedIn} />}
-                       render={() => {
+                       render={() =>
+                       {
                          return this.state.signedIn ?
-                           <Redirect to='/favorites' /> :
-                           <Login />
-                       }} />
-                <Route exact path="/favorites" component={Favorites} />
-                <Route exact path="/advertisers" component={Advertisers} />
+                           <Redirect to='/favorites'/> :
+                           <Login/>;
+                       }}/>
+                <Route exact path="/favorites" component={Favorites}/>
+                <Route exact path="/advertisers" component={Advertisers}/>
               </Switch>
-            </Grid>
+            </Box>
           </MuiThemeProvider>
         </Provider>
       </Router>
-    )
+    );
   }
 }
