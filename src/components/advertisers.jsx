@@ -123,7 +123,7 @@ export default class Advertisers extends React.PureComponent {
     dense: true,
   };
 
-  componentWillMount() {
+  componentDidUpdate(prevState, nextState) {
     console.log("mounted");
     fetchAdvertisers();
   }
