@@ -21,10 +21,6 @@ import {
 //   })
 // }));
 
-let initialAdvertisers = () => {
-  return fetch(mockApi, options);
-};
-
 let favoritesFetch = () => (_.times(2, () => {
   return Map({
     id:            faker.random.uuid(),
@@ -50,15 +46,11 @@ const rootReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADVERTISERS_FETCH:
       console.log("fetching advertisers");
-      return advertisersFetch()
-        .then(r => {
-          let advertisers = [];
-          console.log(r);
-          return state.merge({
-            advertisers:         state.get('advertisers').concat(advertisers),
-            advertisersFiltered: state.get('advertisersFiltered').concat(advertisers)
-          });
-        });
+      let advertisers = action.payload;
+      return state.merge({
+        advertisers:         state.get('advertisers').concat(advertisers),
+        advertisersFiltered: state.get('advertisersFiltered').concat(advertisers)
+      });
     case ADVERTISERS_SEARCH:
       let { searchTerm } = action.payload;
       if (_.isEmpty(action.payload.searchTerm)) {

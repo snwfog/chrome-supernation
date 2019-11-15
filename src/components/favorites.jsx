@@ -8,8 +8,6 @@ import _ from 'lodash';
 import moment from 'moment';
 import faker from 'faker';
 
-import KeyboardEventHandler from 'react-keyboard-event-handler';
-
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 
@@ -84,12 +82,6 @@ export default class Favorites extends React.PureComponent {
     }
   };
 
-  handleKeyPress = (key, event) => {
-    if (key === 'down') {
-      this.props.history.push('/advertisers');
-    }
-  };
-
   render() {
     const { classes, favorites } = this.props;
 
@@ -97,8 +89,6 @@ export default class Favorites extends React.PureComponent {
       <Grid container
             className={classes.root}
             onWheel={this.handleScroll}>
-        <KeyboardEventHandler handleKeys={['down']}
-                              onKeyEvent={this.handleKeyPress} />
         <Navbar navbarTitle={
           <Typography style={{ flexGrow: 1 }}>
             Favorites

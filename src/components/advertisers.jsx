@@ -1,5 +1,7 @@
 import React from 'react';
 
+import axios from 'axios';
+
 import { withRouter } from 'react-router-dom';
 
 import { connect } from 'react-redux';
@@ -70,6 +72,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    dispatch,
     advertisersFetch: () => dispatch(({
       type: ADVERTISERS_FETCH
     })),
@@ -91,19 +94,19 @@ const mapDispatchToProps = dispatch => {
   }
 };
 
-let mockApi = 'http://www.mocky.io/v2/5dcdc4752e0000e17b72a06b';
+let mockApi = 'http://localhost:2222/';
 let options = {
-  headers: {
-    'Accept':       'application/json',
-    'Content-Type': 'application/json;charset=UTF-8',
-  },
-  mode:    'no-cors',
+  url:          mockApi,
+  method:       'get',
+  responseType: 'json',
 };
 
-let fetchAdvertisers = () => {
-  fetch(mockApi, options)
-    .then(r => r.json())
-    .then(data => console.log(data))
+let fetchAdvertisers = (dispatch) => {
+  return axios(options)
+    .then(response => {
+      let { data } = response;
+      dispatch({ type: ADVERTISERS_FETCH, payload: data })
+    });
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -112,20 +115,14 @@ let fetchAdvertisers = () => {
 export default class Advertisers extends React.PureComponent {
   constructor(props) {
     super(props);
-    console.log('advertisers constructed');
   }
 
-  static propTypes = {
-    dense: PropTypes.bool,
-  };
+  static propTypes = {};
 
-  static defaultProps = {
-    dense: true,
-  };
+  static defaultProps = {};
 
-  componentDidUpdate(prevState, nextState) {
-    console.log("mounted");
-    fetchAdvertisers();
+  componentWillMount() {
+    fetchAdvertisers(this.props.dispatch);
   }
 
   handleBackToFavorite = () => {
@@ -157,7 +154,7 @@ export default class Advertisers extends React.PureComponent {
   // }
 
   render() {
-    const { classes, dense } = this.props;
+    const { classes } = this.props;
     return (
       <Grid container
             className={classes.root}
@@ -181,15 +178,14 @@ export default class Advertisers extends React.PureComponent {
                   </Typography>
                 </CardContent>
               </Card> :
-              <List className={classes.root} dense={dense}>
+              <List className={classes.root}>
                 <Grid item>
                   {this.props.advertisersFiltered
                     .map((advertiser, index) => {
                       return (
-                        <Advertiser key={advertiser.get('id')}
-                                    dense={dense}
+                        <Advertiser key={_.get(advertiser, 'id')}
                                     advertiser={advertiser}
-                                    isFavorite={Boolean(advertiser.get('isFavorite'))}
+                                    isFavorite={Boolean(_.get(advertiser, 'isFavorite'))}
                                     secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
                         />
                       )
@@ -199,11 +195,6 @@ export default class Advertisers extends React.PureComponent {
             }
           </Fade>
         </ScrollArea>
-
-        <Button className={classes.backToFavoriteButton}
-                onClick={this.handleBackToFavorite}>
-          <ArrowBack />
-        </Button>
       </Grid>
     )
   }

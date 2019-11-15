@@ -59,21 +59,6 @@ const styles = theme => ({
   fabProgress: {
     position: 'absolute',
   },
-
-  // Dense version
-  avatarDense: {
-    position: 'absolute',
-    width:    40,
-    height:   40,
-  },
-
-  superIconOverlayDense: {
-    position: 'absolute',
-    color:    '#eee',
-    opacity:  0.3,
-    width:    24,
-    height:   24,
-  },
 });
 
 const mapDispatchToProps = dispatch => {
@@ -95,7 +80,6 @@ export default class Advertiser extends React.PureComponent {
   static propTypes = {
     elapseTimeLimit: PropTypes.number,
     advertiser:      PropTypes.object,
-    dense:           PropTypes.bool,
     isFavorite:      PropTypes.bool,
     secondaryAction: PropTypes.func.isRequired,
   };
@@ -103,7 +87,6 @@ export default class Advertiser extends React.PureComponent {
   static defaultProps = {
     elapseTimeLimit: 800,
     advertiser:      null,
-    dense:           false,
     isFavorite:      false,
     secondaryAction: null,
   };
@@ -166,7 +149,6 @@ export default class Advertiser extends React.PureComponent {
 
   render() {
     const {
-            dense,
             isFavorite,
             advertiser,
             classes,
@@ -179,6 +161,8 @@ export default class Advertiser extends React.PureComponent {
             elapseProgress,
           } = this.state;
 
+    const { first_name, last_name, email, avatar, company_name } = advertiser;
+
     return (
       <Paper className={classes.paper}>
         <ListItem className={classes.advertiser}>
@@ -190,43 +174,37 @@ export default class Advertiser extends React.PureComponent {
                   }}
                   onMouseDown={this.beginElapseConfirmation}
                   onMouseUp={this.resetElapseConfirmation}>
-            <Avatar className={
-              dense ?
-                classes.avatarDense :
-                classes.avatar}
-                    alt={advertiser.get('fullName')}
-                    src={advertiser.get('avatarUrl')} />
+            <Avatar className={classes.avatar}
+                    alt={`${first_name} ${last_name}`}
+                    src={avatar} />
             <Grow in={showPopoverIcon}>
-              <SupervisorAccount className={
-                dense ?
-                  classes.superIconOverlayDense :
-                  classes.superIconOverlay} />
+              <SupervisorAccount className={classes.superIconOverlay} />
             </Grow>
             {elapseInProgress &&
-            <CircularProgress value={elapseProgress / this._elapseTickLimit * 100}
-                              size={dense ? 42 : 62}
-                              thickness={2}
-                              className={classes.fabProgress} />}
+            <CircularProgress
+              value={elapseProgress / this._elapseTickLimit * 100}
+              size={62}
+              thickness={2}
+              className={classes.fabProgress} />}
 
             {superInProgress &&
-            <CircularProgress size={dense ? 42 : 62}
+            <CircularProgress size={62}
                               thickness={2}
                               className={classes.fabProgress} />}
           </Button>
           <Grid container direction="column">
             <Typography gutterBottom className={classes.heading}>
-              {advertiser.get('fullName')}
+              {`${first_name} ${last_name}`}
             </Typography>
 
             <Typography className={classes.subheading}>
-              {advertiser.get('email')}
+              {email}
             </Typography>
 
             {
-              !dense &&
               <Typography className={classes.subheading}>
-                {`Last super: ${advertiser.get('lastSuperTime') ?
-                  moment(advertiser.get('lastSuperTime')).fromNow() :
+                {`Last super: ${_.get(advertiser, 'lastSuperTime') ?
+                  moment(_.get(advertiser, 'lastSuperTime')).fromNow() :
                   'Never'}`}
               </Typography>
             }
