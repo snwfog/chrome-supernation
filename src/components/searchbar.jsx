@@ -18,7 +18,9 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps    = state => ({ advertiserSearchName: state.get('advertiserSearchName') });
+const mapStateToProps    = state => ({
+  advertiserSearchName: _.get(state, 'q')
+});
 const mapDispatchToProps = dispatch => ({});
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -47,7 +49,6 @@ export default class SearchBar extends React.PureComponent {
                type="text"
                autoComplete="off"
                placeholder="stackbot@stackadapt.com"
-               value={this.props.advertiserSearchName}
                onChange={(event) => this.props.onSearch(event.target.value)}
                startAdornment={
                  <InputAdornment className={classes.adornment} position="start">

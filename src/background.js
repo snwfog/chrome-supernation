@@ -17,8 +17,10 @@ chrome.system.display.getInfo(function(info) {
 
   chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     console.log('runtime.onMessage', arguments);
+    let advertiser = request.advertiser;
+
     chrome.windows.create({
-      url:             'http://google.com',
+      url:             `http://localhost:3005/admin/switch_user?user_id=${advertiser.id}&account_id=${advertiser.id}`,
       type:            "normal",
       setSelfAsOpener: true,
       incognito:       true,

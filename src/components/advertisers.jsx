@@ -18,6 +18,7 @@ import ScrollArea from 'react-scrollbar';
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 
+import { Sync } from '@material-ui/icons';
 import { List, ListItem, Box } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -59,6 +60,10 @@ const styles = theme => ({
     borderTop: '1px solid grey'
   },
 
+  navbar: {
+    padding: 0,
+  },
+
   scrollArea: {
     width:     '100%',
     // minHeight: 500,
@@ -82,13 +87,19 @@ const styles = theme => ({
 
   scrollShadowText: {
     fontSize: 9,
+  },
+
+  syncIcon: {
+    width:        12,
+    height:       12,
+    marginBottom: -2,
   }
 });
 
 
 const mapStateToProps = state => {
   return {
-    advertisersFiltered: state.get('advertisersFiltered'),
+    advertisers: _.get(state, 'advertisers', []),
   };
 };
 
@@ -137,15 +148,19 @@ let fetchAdvertisers = (dispatch) => {
 export default class Advertisers extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    this.state = {
+      advertisers: props.advertisers,
+    };
   }
 
   static propTypes = {};
 
   static defaultProps = {};
 
-  componentWillMount() {
-    fetchAdvertisers(this.props.dispatch);
-  }
+  // componentWillMount() {
+  //   fetchAdvertisers(this.props.dispatch);
+  // }
 
   handleBackToFavorite = () => {
     this.props.history.push('/favorites');
@@ -159,13 +174,27 @@ export default class Advertisers extends React.PureComponent {
 
   handleReachBottom = ({ realHeight, containerHeight, topPosition }) => {
     // console.log(realHeight, containerHeight, topPosition);
-    let counts          = this.props.advertisersFiltered.size;
+    let counts          = this.props.advertisers.size;
     let itemHeight      = (realHeight - containerHeight) / counts;
     // Trigger reload at approx few items left to display
     let triggerPosition = realHeight - containerHeight - itemHeight * 0.2;
     if (topPosition > triggerPosition) {
       console.log('loading more data...');
       this.props.advertisersFetch();
+    }
+  };
+
+  handleSearch = (q) => {
+    if (_.isEmpty(q)) {
+      this.setState({ advertisers: this.props.advertisers, });
+    } else {
+      this.setState({
+        advertisers: _.filter(this.props.advertisers, advertiser =>
+          // console.log('filtering', advertiser);
+          _.includes(_.toLower(_.get(advertiser, 'email')), _.toLower(q)) ||
+          _.includes(_.toLower(_.get(advertiser, 'first_name')), _.toLower(q)) ||
+          _.includes(_.toLower(_.get(advertiser, 'last_name')), _.toLower(q)))
+      });
     }
   };
 
@@ -176,40 +205,36 @@ export default class Advertisers extends React.PureComponent {
   // }
 
   render() {
-    const { classes } = this.props;
+    const { classes }     = this.props;
+    const { advertisers } = this.state;
     return (
       <Grid container>
         <Box height="5px" width="100%" className={classes.header} />
         <Grid container
               className={classes.grid}
               onWheel={this.handleScrollUp}>
-          <Navbar
-            navbarTitle={<SearchBar
-              onSearch={this.props.advertisersSearch} />} />
+          <Navbar className={classes.navbar}
+                  navbarTitle={
+                    <SearchBar onSearch={this.handleSearch} />} />
           <ScrollArea className={classes.scrollArea}
                       speed={0.2}
                       onScroll={this.handleReachBottom}
                       smoothScrolling={true}
                       horizontal={false}>
             <Fade in={true} timeout={760}>
-              {this.props.advertisersFiltered.isEmpty() ?
-                <Card className={classes.empty}>
-                  <CardContent>
-                    <Typography gutterBottom>
-                      Tips:
-                    </Typography>
-                    <Typography component="p">
-                      No advertisers found.
-                    </Typography>
-                  </CardContent>
-                </Card>
+              {_.isEmpty(advertisers) ?
+                <Box className={classes.empty}>
+                  <Typography component="p">
+                    No advertisers found.
+                  </Typography>
+                </Box>
                 :
                 <List className={classes.list}>
-                  {this.props.advertisersFiltered
+                  {advertisers
                     .map((advertiser, index) =>
                       <Advertiser
                         className={classes.card}
-                        key={_.get(advertiser, 'id')}
+                        key={`${_.get(advertiser, 'id')} ${_.get(advertiser, 'email')}}`}
                         advertiser={advertiser}
                         isFavorite={Boolean(_.get(advertiser, 'isFavorite'))}
                         secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
@@ -221,7 +246,8 @@ export default class Advertisers extends React.PureComponent {
         </Grid>
         <Box className={classes.scrollShadow} textAlign={"center"}>
           <Typography className={classes.scrollShadowText}>
-            Scroll down for full list
+            Scroll down for full list <Sync className={classes.syncIcon}
+                                            size={"small"} />
           </Typography>
         </Box>
       </Grid>

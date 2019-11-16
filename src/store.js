@@ -2,6 +2,7 @@ import { createStore } from 'redux';
 
 import faker from 'faker';
 import _ from 'lodash';
+import advertisersJSON from './advertisers_json'
 
 import { Map, List, OrderedSet } from 'immutable';
 
@@ -32,42 +33,39 @@ let favoritesFetch = () => (_.times(2, () => {
   })
 }));
 
-const initialState = Map({
+let allAdvertisers = JSON.parse(advertisersJSON);
+const initialState = {
   advertiserSearchName: '',
-  favorites:            OrderedSet.of(...favoritesFetch()),
-
-  advertisers:         List([]),
-  advertiserEmpty:     true,
-  advertisersFiltered: List([]),
-});
+  // favorites:            OrderedSet.of(...favoritesFetch()),
+  advertisers:          allAdvertisers,
+};
 
 const rootReducer = (state = initialState, action) => {
   console.log(action);
   switch (action.type) {
     case ADVERTISERS_FETCH:
       console.log("fetching advertisers");
-      let advertisers = _.get(action, 'payload', List());
-      return state.merge({
-        advertisers:         state.get('advertisers').concat(advertisers),
-        advertisersFiltered: state.get('advertisersFiltered').concat(advertisers)
-      });
+      return {
+        ...state,
+        advertisers: allAdvertisers,
+      };
     case ADVERTISERS_SEARCH:
       let { searchTerm } = action.payload;
       if (_.isEmpty(action.payload.searchTerm)) {
-        return state.merge({
-          advertiserSearchName: searchTerm,
-          advertisersFiltered:  state.get('advertisers'),
-        });
+        return {
+          ...state,
+          q:           searchTerm,
+          advertisers: allAdvertisers,
+        }
       } else {
-        return state.merge({
-          advertiserSearchName: searchTerm,
-          advertisersFiltered:  state
-                                  .get('advertisers')
-                                  .filter(advertiser =>
-                                    // console.log('filtering', advertiser);
-                                    _.includes(_.toLower(_.get(advertiser, 'email')), searchTerm) ||
-                                    _.includes(_.toLower(_.get(advertiser, 'full_name')), searchTerm))
-        });
+        return {
+          ...state,
+          q:           searchTerm,
+          advertisers: _.filter(allAdvertisers, advertiser =>
+            // console.log('filtering', advertiser);
+            _.includes(_.toLower(_.get(advertiser, 'email')), searchTerm) ||
+            _.includes(_.toLower(_.get(advertiser, 'full_name')), searchTerm))
+        };
       }
     case FAVORITES_ADD:
       let favorite = action.payload.advertiser.set('isFavorite', true);

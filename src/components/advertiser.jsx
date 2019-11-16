@@ -49,13 +49,15 @@ const styles = theme => ({
   },
 
   heading: {
-    fontSize:   15,
-    fontWeight: 500,
-    margin:     0,
+    fontSize:     14,
+    fontWeight:   500,
+    margin:       0,
+    marginBottom: -4,
   },
 
   subheading: {
-    fontSize: 15,
+    fontSize:     14,
+    marginBottom: -3,
   },
 
   finerprint: {
@@ -151,8 +153,8 @@ export default class Advertiser extends React.PureComponent {
     let { advertiser } = this.props;
     console.log("super into", advertiser);
     chrome.runtime.sendMessage({
+        advertiser,
         action: "super",
-        url:    "http://localhost:3005/admin/super",
       },
       function(createdWindow) {
         console.log(createdWindow);
@@ -195,6 +197,8 @@ export default class Advertiser extends React.PureComponent {
         <ListItem className={classes.advertiser}>
 
           <Fab className={classes.fab}
+               disableTouchRipple
+               disableRipple
                onMouseEnter={this.togglePopoverIcon}
                onMouseLeave={() => {
                  this.togglePopoverIcon();
@@ -243,7 +247,7 @@ export default class Advertiser extends React.PureComponent {
           </Grid>
 
           <ListItemSecondaryAction onClick={this.props.secondaryAction}>
-            <IconButton disableRipple disableFocusRipple>
+            <IconButton>
               {isFavorite ?
                 <Star style={{ color: '#00FFE0' }} /> :
                 <StarBorder style={{ color: '#00FFE0' }} />}
