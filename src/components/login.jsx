@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import _ from 'lodash';
+import { isEmpty } from 'lodash';
 
 import { grey, blue } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
@@ -69,14 +69,14 @@ export default class Login extends React.PureComponent {
 
   handleSuperPlatform = () => {
     console.log(this.state);
-    if (!_.isEmpty(this.state.superName) && !_.isEmpty(this.state.superPassword)) {
+    if (!isEmpty(this.state.superName) && !isEmpty(this.state.superPassword)) {
       this.props.history.push('/favorites');
     } else {
-      if (_.isEmpty(this.state.superName)) {
+      if (isEmpty(this.state.superName)) {
         this.setState({ showTooltipSupernameRequired: true });
       }
 
-      if (_.isEmpty(this.state.password)) {
+      if (isEmpty(this.state.password)) {
         this.setState({ showTooltipPasswordRequired: true });
       }
     }

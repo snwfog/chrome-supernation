@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 
-import _ from 'lodash';
+import { get, isEmpty, toLower, includes, filter } from 'lodash';
 
 import PropTypes from 'prop-types';
 
@@ -29,6 +29,10 @@ import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import { ArrowBack } from '@material-ui/icons';
 import Divider from '@material-ui/core/Divider';
+import SortByAlphaIcon from '@material-ui/icons/SortByAlpha';
+import TimerIcon from '@material-ui/icons/Timer';
+import IconButton from '@material-ui/core/IconButton';
+
 
 import {
   ADVERTISERS_FETCH,
@@ -99,7 +103,7 @@ const styles = theme => ({
 
 const mapStateToProps = state => {
   return {
-    advertisers: _.get(state, 'advertisers', []),
+    advertisers: get(state, 'advertisers', []),
   };
 };
 
@@ -185,15 +189,15 @@ export default class Advertisers extends React.PureComponent {
   };
 
   handleSearch = (q) => {
-    if (_.isEmpty(q)) {
+    if (isEmpty(q)) {
       this.setState({ advertisers: this.props.advertisers, });
     } else {
       this.setState({
-        advertisers: _.filter(this.props.advertisers, advertiser =>
+        advertisers: filter(this.props.advertisers, advertiser =>
           // console.log('filtering', advertiser);
-          _.includes(_.toLower(_.get(advertiser, 'email')), _.toLower(q)) ||
-          _.includes(_.toLower(_.get(advertiser, 'first_name')), _.toLower(q)) ||
-          _.includes(_.toLower(_.get(advertiser, 'last_name')), _.toLower(q)))
+          includes(toLower(get(advertiser, 'email')), toLower(q)) ||
+          includes(toLower(get(advertiser, 'first_name')), toLower(q)) ||
+          includes(toLower(get(advertiser, 'last_name')), toLower(q)))
       });
     }
   };
@@ -207,6 +211,8 @@ export default class Advertisers extends React.PureComponent {
   render() {
     const { classes }     = this.props;
     const { advertisers } = this.state;
+    const advertisersCount = get(advertisers, 'length');
+
     return (
       <Grid container>
         <Box height="5px" width="100%" className={classes.header} />
@@ -221,27 +227,43 @@ export default class Advertisers extends React.PureComponent {
                       onScroll={this.handleReachBottom}
                       smoothScrolling={true}
                       horizontal={false}>
-            <Fade in={true} timeout={760}>
-              {_.isEmpty(advertisers) ?
+            <Box display='flex' flexDirection='column'>
+              <Box display='flex' alignItems='center'
+                   justifyContent='space-between'>
                 <Box className={classes.empty}>
                   <Typography component="p">
-                    No advertisers found.
+                    {advertisersCount ?
+                      `${advertisersCount} account(s) found`
+                      : 'No advertisers found.'
+                    }
                   </Typography>
                 </Box>
-                :
+                {!!advertisersCount && (
+                  <Box>
+                    <IconButton>
+                      <SortByAlphaIcon color='disabled'/>
+                    </IconButton>
+                    <IconButton>
+                      <TimerIcon color='disabled'/>
+                    </IconButton>
+                  </Box>
+                )}
+              </Box>
+              <Fade in timeout={760}>
                 <List className={classes.list}>
                   {advertisers
                     .map((advertiser, index) =>
                       <Advertiser
                         className={classes.card}
-                        key={`${_.get(advertiser, 'id')} ${_.get(advertiser, 'email')}}`}
+                        key={`${get(advertiser, 'id')} ${get(advertiser, 'email')}}`}
                         advertiser={advertiser}
-                        isFavorite={Boolean(_.get(advertiser, 'isFavorite'))}
+                        isFavorite={Boolean(get(advertiser, 'isFavorite'))}
                         secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
                       />
                     )}
-                </List>}
-            </Fade>
+                </List>
+              </Fade>
+            </Box>
           </ScrollArea>
         </Grid>
         <Box className={classes.scrollShadow} textAlign={"center"}>

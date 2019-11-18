@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 
 import { withRouter } from 'react-router-dom';
 
-import _ from 'lodash';
-import moment from 'moment';
-import faker from 'faker';
+import { isEmpty } from 'lodash';
+//import moment from 'moment';
+//import faker from 'faker';
 
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
@@ -80,7 +80,7 @@ const mapDispatchToProps = dispatch => {
 export default class Favorites extends React.PureComponent {
   constructor(props) {
     super(props);
-    // if (_.isEmpty(props.favorites)) {
+    // if (isEmpty(props.favorites)) {
     //   this.props.history.push('/advertisers');
     // }
     this.state = { showDialogFavoritesRemove: false };

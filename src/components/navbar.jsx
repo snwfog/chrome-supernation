@@ -98,14 +98,6 @@ export default class Navbar extends React.PureComponent {
               <ListItemIcon><PowerSettingsNew /></ListItemIcon>
               <ListItemText>Logout</ListItemText>
             </MenuItem>
-            <MenuItem>
-              <ListItemIcon><Sort /></ListItemIcon>
-              <ListItemText>Display by access time</ListItemText>
-            </MenuItem>
-            <MenuItem>
-              <ListItemIcon><SortByAlpha /></ListItemIcon>
-              <ListItemText>Display by alphabetically</ListItemText>
-            </MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>

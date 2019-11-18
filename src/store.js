@@ -1,8 +1,9 @@
 import { createStore } from 'redux';
 
 import faker from 'faker';
-import _ from 'lodash';
+import { get, isEmpty, toLower, includes, filter, times } from 'lodash';
 import advertisersJSON from './advertisers_json'
+
 
 import { Map, List, OrderedSet } from 'immutable';
 
@@ -12,7 +13,7 @@ import {
   FAVORITES_ADD, FAVORITES_REMOVE
 } from "./actions";
 
-// let advertisersFetch = () => (_.times(20, () => {
+// let advertisersFetch = () => (times(20, () => {
 //   return Map({
 //     id:            faker.random.uuid(),
 //     email:         faker.internet.email(),
@@ -22,7 +23,7 @@ import {
 //   })
 // }));
 
-let favoritesFetch = () => (_.times(2, () => {
+let favoritesFetch = () => (times(2, () => {
   return Map({
     id:            faker.random.uuid(),
     email:         faker.internet.email(),
@@ -51,7 +52,7 @@ const rootReducer = (state = initialState, action) => {
       };
     case ADVERTISERS_SEARCH:
       let { searchTerm } = action.payload;
-      if (_.isEmpty(action.payload.searchTerm)) {
+      if (isEmpty(action.payload.searchTerm)) {
         return {
           ...state,
           q:           searchTerm,
@@ -61,10 +62,10 @@ const rootReducer = (state = initialState, action) => {
         return {
           ...state,
           q:           searchTerm,
-          advertisers: _.filter(allAdvertisers, advertiser =>
+          advertisers: filter(allAdvertisers, advertiser =>
             // console.log('filtering', advertiser);
-            _.includes(_.toLower(_.get(advertiser, 'email')), searchTerm) ||
-            _.includes(_.toLower(_.get(advertiser, 'full_name')), searchTerm))
+            includes(toLower(get(advertiser, 'email')), searchTerm) ||
+            includes(toLower(get(advertiser, 'full_name')), searchTerm))
         };
       }
     case FAVORITES_ADD:
