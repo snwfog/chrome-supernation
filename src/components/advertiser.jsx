@@ -37,7 +37,7 @@ const styles = theme => ({
 
   fabProgress: {
     disableRipple: true,
-    color:         '#00FFE0',
+    color:         '#0061FF',
     position:      'absolute',
   },
 
@@ -88,14 +88,14 @@ export default class Advertiser extends React.PureComponent {
   static propTypes = {
     elapseTimeLimit: PropTypes.number,
     advertiser:      PropTypes.object,
-    isFavorite:      PropTypes.bool,
+    // isFavorite:      PropTypes.bool,
     secondaryAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     elapseTimeLimit: 800,
     advertiser:      null,
-    isFavorite:      false,
+    // isFavorite:      false,
     secondaryAction: null,
   };
 
@@ -110,13 +110,13 @@ export default class Advertiser extends React.PureComponent {
     this.setState({ showPopoverIcon: !this.state.showPopoverIcon })
   };
 
-  handleSecondaryAction = () => {
+  handleUpdateFavorite = () => {
     // this.props.secondaryAction();
     // console.log('updating advertiser');
     // this.forceUpdate();
-
+    //
     // this.setState({ dialogFavoritesRemove: !this.state.dialogFavoritesRemove });
-
+    //
     // chrome.storage.sync.set({ email: 'charles@stackadapt.com' }, () => {
     //   console.log('sync\'ed');
     // });
@@ -172,7 +172,6 @@ export default class Advertiser extends React.PureComponent {
 
   render() {
     const {
-            isFavorite,
             advertiser,
             classes,
           } = this.props;
@@ -189,7 +188,8 @@ export default class Advertiser extends React.PureComponent {
             last_name,
             email,
             avatar,
-            company_name
+            company_name,
+            favorite,
           } = advertiser;
 
     return (
@@ -214,16 +214,16 @@ export default class Advertiser extends React.PureComponent {
             <CircularProgress
               className={classes.fabProgress}
               variant={"determinate"}
-              thickness={2}
-              size={50}
+              thickness={3}
+              size={52}
               value={elapseProgress}
             />}
 
             {superInProgress &&
             <CircularProgress
               className={classes.fabProgress}
-              thickness={2}
-              size={50}
+              thickness={3}
+              size={52}
             />}
           </Fab>
 
@@ -248,9 +248,9 @@ export default class Advertiser extends React.PureComponent {
 
           <ListItemSecondaryAction onClick={this.props.secondaryAction}>
             <IconButton>
-              {isFavorite ?
-                <Star style={{ color: '#00FFE0' }} /> :
-                <StarBorder style={{ color: '#00FFE0' }} />}
+              {favorite ?
+                <Star style={{ color: '#0061FF' }} /> :
+                <StarBorder style={{ color: '#0061FF' }} />}
             </IconButton>
           </ListItemSecondaryAction>
 

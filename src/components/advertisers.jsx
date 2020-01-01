@@ -37,12 +37,13 @@ import IconButton from '@material-ui/core/IconButton';
 import {
   ADVERTISERS_FETCH,
   ADVERTISERS_SEARCH,
-  FAVORITES_ADD
+  FAVORITE_TOGGLE
 } from '../actions';
 
 import SearchBar from './searchbar';
 import Navbar from './navbar';
 import Advertiser from './advertiser';
+import advertisersJSON from "../advertisers_json";
 
 const styles = theme => ({
   grid: {
@@ -100,6 +101,9 @@ const styles = theme => ({
   }
 });
 
+// Descending
+let sortByFavorites = ad => !get(ad, 'favorite', false);
+let sortByFirstName = ad => get(ad, 'first_name', '');
 
 const mapStateToProps = state => {
   return {
@@ -121,8 +125,8 @@ const mapDispatchToProps = dispatch => {
       }
     })),
 
-    favoritesAdd: (advertiser, index) => dispatch(({
-      type:    FAVORITES_ADD,
+    favoriteToggle: (advertiser, index) => dispatch(({
+      type:    FAVORITE_TOGGLE,
       payload: {
         advertiser,
         index,
@@ -146,6 +150,12 @@ let fetchAdvertisers = (dispatch) => {
     });
 };
 
+let match = (advertiser, q) => {
+  return includes(toLower(get(advertiser, 'email')), toLower(q)) ||
+    includes(toLower(get(advertiser, 'first_name')), toLower(q)) ||
+    includes(toLower(get(advertiser, 'last_name')), toLower(q))
+};
+
 @connect(mapStateToProps, mapDispatchToProps)
 @withRouter
 @withStyles(styles)
@@ -154,7 +164,7 @@ export default class Advertisers extends React.PureComponent {
     super(props);
 
     this.state = {
-      advertisers: props.advertisers,
+      q: '', advertisers: props.advertisers,
     };
   }
 
@@ -188,19 +198,21 @@ export default class Advertisers extends React.PureComponent {
     }
   };
 
-  handleSearch = (q) => {
-    if (isEmpty(q)) {
-      this.setState({ advertisers: this.props.advertisers, });
-    } else {
-      this.setState({
-        advertisers: filter(this.props.advertisers, advertiser =>
-          // console.log('filtering', advertiser);
-          includes(toLower(get(advertiser, 'email')), toLower(q)) ||
-          includes(toLower(get(advertiser, 'first_name')), toLower(q)) ||
-          includes(toLower(get(advertiser, 'last_name')), toLower(q)))
-      });
-    }
-  };
+  // HACK!! We'll just mark user as hidden
+  handleSearch = _.debounce(q => {
+    this.setState({ q });
+    // if (isEmpty(q)) {
+    //   this.setState({ advertisers: this.props.advertisers, });
+    // } else {
+    //   this.setState({
+    //     advertisers: filter(this.props.advertisers, advertiser =>
+    //       // console.log('filtering', advertiser);
+    //       includes(toLower(get(advertiser, 'email')), toLower(q)) ||
+    //       includes(toLower(get(advertiser, 'first_name')), toLower(q)) ||
+    //       includes(toLower(get(advertiser, 'last_name')), toLower(q)))
+    //   });
+    // }
+  }, 400);
 
   // Using pure component implement this already using shallow comparison
   // shouldComponentUpdate(nextProps, nextState) {
@@ -209,9 +221,14 @@ export default class Advertisers extends React.PureComponent {
   // }
 
   render() {
-    const { classes }     = this.props;
-    const { advertisers } = this.state;
-    const advertisersCount = get(advertisers, 'length');
+    const { classes, advertisers } = this.props;
+    const { q }                    = this.state;
+
+    const filteredAdvertisers = _.sortBy(advertisers, [
+      sortByFavorites,
+      sortByFirstName
+    ]).filter(advertiser => isEmpty(q) || match(advertiser, q));
+    const advertisersCount    = get(filteredAdvertisers, 'length');
 
     return (
       <Grid container>
@@ -241,26 +258,24 @@ export default class Advertisers extends React.PureComponent {
                 {!!advertisersCount && (
                   <Box>
                     <IconButton>
-                      <SortByAlphaIcon color='disabled'/>
+                      <SortByAlphaIcon color='disabled' />
                     </IconButton>
                     <IconButton>
-                      <TimerIcon color='disabled'/>
+                      <TimerIcon color='disabled' />
                     </IconButton>
                   </Box>
                 )}
               </Box>
-              <Fade in timeout={760}>
+              <Fade in timeout={180}>
                 <List className={classes.list}>
-                  {advertisers
+                  {filteredAdvertisers
                     .map((advertiser, index) =>
                       <Advertiser
                         className={classes.card}
-                        key={`${get(advertiser, 'id')} ${get(advertiser, 'email')}}`}
+                        key={get(advertiser, 'id')}
                         advertiser={advertiser}
-                        isFavorite={Boolean(get(advertiser, 'isFavorite'))}
-                        secondaryAction={() => this.props.favoritesAdd(advertiser, index)}
-                      />
-                    )}
+                        secondaryAction={() => this.props.favoriteToggle(advertiser, index)}
+                      />)}
                 </List>
               </Fade>
             </Box>

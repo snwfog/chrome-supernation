@@ -1,7 +1,7 @@
 import { createStore } from 'redux';
 
 import faker from 'faker';
-import { get, isEmpty, toLower, includes, filter, times } from 'lodash';
+import { get, isEmpty, toLower, includes, filter, times, remove } from 'lodash';
 import advertisersJSON from './advertisers_json'
 
 
@@ -10,7 +10,7 @@ import { Map, List, OrderedSet } from 'immutable';
 import {
   ADVERTISERS_FETCH,
   ADVERTISERS_SEARCH,
-  FAVORITES_ADD, FAVORITES_REMOVE
+  FAVORITE_TOGGLE, FAVORITES_REMOVE
 } from "./actions";
 
 // let advertisersFetch = () => (times(20, () => {
@@ -34,11 +34,15 @@ let favoritesFetch = () => (times(2, () => {
   })
 }));
 
-let allAdvertisers = JSON.parse(advertisersJSON);
+let allAdvertisers = _.map(JSON.parse(advertisersJSON), ad => ({
+  ...ad,
+  favorite: _.get(ad, 'favorite', false),
+}));
+
 const initialState = {
-  advertiserSearchName: '',
+  q:           '',
   // favorites:            OrderedSet.of(...favoritesFetch()),
-  advertisers:          allAdvertisers,
+  advertisers: allAdvertisers,
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -68,12 +72,18 @@ const rootReducer = (state = initialState, action) => {
             includes(toLower(get(advertiser, 'full_name')), searchTerm))
         };
       }
-    case FAVORITES_ADD:
-      let favorite = action.payload.advertiser.set('isFavorite', true);
-      state        = state.update('favorites', favorites => favorites.add(favorite));
-      state        = state.updateIn(['advertisers', action.payload.index],
-        advertiser => advertiser.set('isFavorite', true));
-      return state;
+    case FAVORITE_TOGGLE:
+      let { advertiser }  = action.payload;
+      let { advertisers } = state;
+      advertiser.favorite = !get(advertiser, 'favorite', false);
+      remove(advertisers, ad => ad.id === advertiser.id);
+      return {
+        ...state,
+        advertisers: [
+          advertiser,
+          ...advertisers,
+        ],
+      };
     case FAVORITES_REMOVE:
       return state.updateIn(['favorites'],
         favorites => favorites.delete(action.payload.favorite));

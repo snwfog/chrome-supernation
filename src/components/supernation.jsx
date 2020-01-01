@@ -60,7 +60,7 @@ export default class Supernation extends React.PureComponent {
   }
 
   state = {
-    signedIn:       true,
+    signedIn:       false,
     lastSignedInAt: null
   };
 
@@ -70,7 +70,9 @@ export default class Supernation extends React.PureComponent {
       <Router>
         <Provider store={store}>
           <MuiThemeProvider theme={theme}>
-            <Box component={Grid} container className={classes.appcontainer}>
+            <Box container
+                 component={Grid}
+                 className={classes.appcontainer}>
               <Switch>
                 <Route exact path="/"
                   // component={<Login signedIn={this.state.signedIn} />}

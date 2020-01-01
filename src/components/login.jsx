@@ -15,37 +15,64 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import { OpenInNew, FlashOn } from '@material-ui/icons';
 import Input from '@material-ui/core/Input';
+import { Box } from "@material-ui/core";
 
-const theme = createMuiTheme({
-  palette:    {
-    type:    'light',
-    primary: {
-      main: '#43d3af'
-    },
-  },
-  typography: {
-    fontFamily:      ["Roboto", "-apple-system",
-                       "BlinkMacSystemFont", "Segoe UI",
-                       "Arial", "sans-serif"].join(","),
-    useNextVariants: true,
-  }
-});
+// const theme = createMuiTheme({
+//   palette:    {
+//     type:    'light',
+//     primary: {
+//       main: '#43d3af'
+//     },
+//   },
+//   typography: {
+//     fontFamily:      ["Roboto", "-apple-system",
+//                        "BlinkMacSystemFont", "Segoe UI",
+//                        "Arial", "sans-serif"].join(","),
+//     useNextVariants: true,
+//   }
+// });
 
 const styles = theme => ({
-  root: {
-    backgroundColor: grey['100']
+  grid: {
+    backgroundColor: '#FFF',
+    width:           300,
+    height:          200,
+    alignSelf:       'center',
   },
 
-  textFieldPopper: {
-    marginBottom: -50
+  header: {
+    backgroundImage: `linear-gradient(to right, #0061FF , #00FFE0)`
   },
 
-  textFieldTooltip: {
-    backgroundColor: '#43d3af'
-  }
+  loginGrid: {
+    display:        'flex',
+    justifyContent: 'center',
+  },
+
+  loginForm: {
+    width:          300,
+    height:         240,
+    padding:        '10% 0',
+    display:        'flex',
+    flexDirection:  'column',
+    justifyContent: 'space-around',
+  },
+
+  loginBtn: {
+    alignSelf:    'center',
+    background:   'linear-gradient(270deg, #0061FF, #00FFE0)',
+    borderRadius: 999,
+    // border:       3,
+    // borderColor:  '#43d3af',
+    color:        'white',
+    boxShadow:    '0 3px 5px 2px rgba(67, 211, 175, .3)',
+    padding:      '10px 30px',
+    width:        180,
+  },
 });
 
 @withRouter
@@ -101,85 +128,71 @@ export default class Login extends React.PureComponent {
     const { classes } = this.props;
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <Grid container className={classes.root} justify="center">
-          <Grid container
-                direction="column"
-                justify="space-around"
-                style={{
-                  width:     '300px',
-                  height:    '200px',
-                  alignSelf: 'center',
-                }}>
-            <Typography align="left">
-              Supernation
-            </Typography>
-            <Grid container alignItems="center" justify="center">
-              <FormControl fullWidth>
-                <InputLabel htmlFor="super-name">
-                  Supername
-                </InputLabel>
-                <Tooltip classes={{
-                  popper:  classes.textFieldPopper,
-                  tooltip: classes.textFieldTooltip
-                }}
-                         title="Supername is required"
-                         placement="top-end"
-                         disableFocusListener={true}
-                         disableHoverListener={true}
-                         disableTouchListener={true}
-                         open={true}>
-                  <Input fullWidth id='super-name' name='superName'
-                         type='text'
-                         onChange={this.updateTextfield} />
-                </Tooltip>
-              </FormControl>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="super-password">
-                  Password
-                </InputLabel>
-                <Tooltip classes={{
-                  popper:  classes.textFieldPopper,
-                  tooltip: classes.textFieldTooltip
-                }}
-                         title="Password is required"
-                         placement="top-end"
-                         disableFocusListener={true}
-                         disableHoverListener={true}
-                         disableTouchListener={true}
-                         open={true}>
-                  <Input fullWidth id='super-password' name='superPassword'
-                         type='password'
-                         onChange={this.updateTextfield} />
-                </Tooltip>
-              </FormControl>
-            </Grid>
-          </Grid>
-          <Grid container justify="center">
-            <Grid item style={{ margin: 10 }}>
-              <Button onClick={this.handleSuperPlatform}
-                      style={{
-                        background:   'linear-gradient(270deg,#3bf5c6,#3381ec)',
-                        borderRadius: 3,
-                        border:       3,
-                        borderColor:  '#43d3af',
-                        color:        'white',
-                        height:       48,
-                        boxShadow:    '0 3px 5px 2px rgba(67, 211, 175, .3)'
-                      }}>
-                Super
-                <FlashOn style={{ marginLeft: 10 }} />
-              </Button>
-            </Grid>
-
-            <Grid item style={{ margin: 10 }}>
-              <IconButton onClick={this.handleOpenPlatform}>
-                <OpenInNew />
-              </IconButton>
-            </Grid>
-          </Grid>
+      <Grid container className={classes.root} justify="center">
+        <Box height="5px" width="100%" className={classes.header} />
+        <Grid container className={classes.loginGrid}>
+          <form className={classes.loginForm}>
+            <TextField required fullWidth
+                       InputLabelProps={{ shrink: true }}
+                       label="Supername" />
+            <TextField required fullWidth
+                       InputLabelProps={{ shrink: true }}
+                       label="Password"
+                       type="password"
+                       autoComplete="current-password" />
+            <Button onClick={this.handleSuperPlatform}
+                    className={classes.loginBtn}>
+              Super
+              <FlashOn style={{ marginLeft: 10 }} />
+            </Button>
+            {/*<Grid item style={{ margin: 10 }}>*/}
+            {/*  <IconButton onClick={this.handleOpenPlatform}>*/}
+            {/*    <OpenInNew />*/}
+            {/*  </IconButton>*/}
+            {/*</Grid>*/}
+          </form>
+          {/*<FormControl fullWidth>*/}
+          {/*  <InputLabel htmlFor="super-name">*/}
+          {/*    Supername*/}
+          {/*  </InputLabel>*/}
+          {/*  <Tooltip classes={{*/}
+          {/*    popper:  classes.textFieldPopper,*/}
+          {/*    tooltip: classes.textFieldTooltip*/}
+          {/*  }}*/}
+          {/*           title="Supername is required"*/}
+          {/*           placement="top-end"*/}
+          {/*           disableFocusListener={true}*/}
+          {/*           disableHoverListener={true}*/}
+          {/*           disableTouchListener={true}*/}
+          {/*           open={true}>*/}
+          {/*    <Input fullWidth id='super-name' name='superName'*/}
+          {/*           type='text'*/}
+          {/*           onChange={this.updateTextfield} />*/}
+          {/*  </Tooltip>*/}
+          {/*</FormControl>*/}
+          {/*<FormControl fullWidth>*/}
+          {/*  <InputLabel htmlFor="super-password">*/}
+          {/*    Password*/}
+          {/*  </InputLabel>*/}
+          {/*  <Tooltip classes={{*/}
+          {/*    popper:  classes.textFieldPopper,*/}
+          {/*    tooltip: classes.textFieldTooltip*/}
+          {/*  }}*/}
+          {/*           title="Password is required"*/}
+          {/*           placement="top-end"*/}
+          {/*           disableFocusListener={true}*/}
+          {/*           disableHoverListener={true}*/}
+          {/*           disableTouchListener={true}*/}
+          {/*           open={true}>*/}
+          {/*    <Input fullWidth id='super-password' name='superPassword'*/}
+          {/*           type='password'*/}
+          {/*           onChange={this.updateTextfield} />*/}
+          {/*  </Tooltip>*/}
+          {/*</FormControl>*/}
         </Grid>
-      </MuiThemeProvider>
+        {/*<Grid container justify="center">*/}
+        {/*</Grid>*/}
+      </Grid>
     );
   }
 }
